@@ -1,4 +1,4 @@
-package com.map.gis;
+package com.goldfinger.gis;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

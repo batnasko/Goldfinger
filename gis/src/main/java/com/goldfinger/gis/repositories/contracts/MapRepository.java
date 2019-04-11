@@ -1,5 +1,9 @@
 package com.goldfinger.gis.repositories.contracts;
 
-public interface MapRepository {
+import com.goldfinger.gis.models.Point;
+import com.goldfinger.gis.models.Shape;
 
+
+public interface MapRepository {
+    Shape getShape(Point point, String tableName);
 }
