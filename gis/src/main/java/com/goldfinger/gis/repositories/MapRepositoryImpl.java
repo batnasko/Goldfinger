@@ -2,7 +2,7 @@ package com.goldfinger.gis.repositories;
 
 import com.goldfinger.gis.models.*;
 import com.goldfinger.gis.repositories.contracts.MapRepository;
-import com.goldfinger.gis.repositories.helpers.ShapeParser;
+import com.goldfinger.gis.repositories.helpers.Parser;
 import com.vividsolutions.jts.io.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -19,17 +19,17 @@ import java.util.List;
 @PropertySource("classpath:application.properties")
 public class MapRepositoryImpl implements MapRepository {
     private static final String SHAPE_NOT_FOUND = "Shape not found";
-    private static final String FAILED_TO_PARSE_SHAPE = "Failed to parse shape binary to Geometry";
+    private static final String FAILED_TO_PARSE_SHAPE = "Failed to parseShape shape binary to Geometry";
 
     private String dbUrl, username, password;
-    private ShapeParser shapeParser;
+    private Parser parser;
 
     @Autowired
     public MapRepositoryImpl(Environment environment) {
         dbUrl = environment.getProperty("database.url.jdbc");
         username = environment.getProperty("database.username");
         password = environment.getProperty("database.password");
-        this.shapeParser = new ShapeParser();
+        this.parser = new Parser();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class MapRepositoryImpl implements MapRepository {
         ) {
             List<Shape> shapes = new ArrayList<>();
             while (resultSet.next()) {
-                shapes.add(shapeParser.parse(resultSet));
+                shapes.add(parser.parseShape(resultSet));
             }
             return shapes;
         } catch (SQLException e) {
@@ -64,7 +64,7 @@ public class MapRepositoryImpl implements MapRepository {
                 ResultSet resultSet = statement.executeQuery(sql)
         ) {
             if (resultSet.next()) {
-                return shapeParser.parse(resultSet);
+                return parser.parseShape(resultSet);
             }
             throw new ResourceAccessException(SHAPE_NOT_FOUND);
         } catch (SQLException e) {

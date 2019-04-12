@@ -1,5 +1,6 @@
 package com.goldfinger.gis.repositories.helpers;
 
+import com.goldfinger.gis.models.Shape;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKBReader;
@@ -7,10 +8,34 @@ import com.vividsolutions.jts.io.WKBReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
-public class GeometryParser {
+public class Parser {
 
-    public Geometry parse(InputStream inputStream) throws IOException, ParseException {
+
+    public Shape parseShape(ResultSet resultSet) throws IOException, ParseException, SQLException {
+        Shape shape = new Shape();
+        shape.setGeometry(parseGeometry(resultSet.getBinaryStream("SHAPE")));
+
+        ResultSetMetaData resultSetColumns = resultSet.getMetaData();
+
+        Map<String, String> properties = new HashMap<>();
+        for (int i = 1; i <= resultSetColumns.getColumnCount(); i++) {
+            if (resultSetColumns.getColumnName(i).equals("SHAPE")) {
+                continue;
+            }
+            properties.put(resultSetColumns.getColumnName(i), resultSet.getString(i));
+        }
+        shape.setProperties(properties);
+
+        return shape;
+    }
+
+    public Geometry parseGeometry(InputStream inputStream) throws IOException, ParseException {
 
         Geometry dbGeometry = null;
 
