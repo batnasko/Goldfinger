@@ -73,4 +73,5 @@ public class MapRepositoryImpl implements MapRepository {
             throw new IllegalArgumentException(FAILED_TO_PARSE_SHAPE);
         }
     }
+
 }
