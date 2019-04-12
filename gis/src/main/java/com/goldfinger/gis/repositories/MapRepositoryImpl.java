@@ -35,10 +35,10 @@ public class MapRepositoryImpl implements MapRepository {
 
     @Override
     public List<Shape> getAll(String tableName) {
-        String sql = "SELECT * FROM " + tableName + ";";
+        String sql = "SELECT * FROM ?;";
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
-                Statement statement=connection.createStatement();
+                PreparedStatement statement = prepareStatement(connection, sql, tableName);
                 ResultSet resultSet = statement.executeQuery(sql)
         ){
             List<Shape> shapes = new ArrayList<>();
@@ -73,6 +73,14 @@ public class MapRepositoryImpl implements MapRepository {
         } catch(ParseException | IOException e){
             throw new IllegalArgumentException(FAILED_TO_PARSE_SHAPE);
         }
+    }
+
+    private PreparedStatement prepareStatement(Connection connection,String query, String... parameters)throws SQLException{
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        for (int i = 1; i <= parameters.length; i++) {
+            preparedStatement.setString(i, parameters[i]);
+        }
+        return preparedStatement;
     }
 
 
