@@ -4,17 +4,8 @@ import com.vividsolutions.jts.geom.Geometry;
 import java.util.Map;
 
 public class Shape {
-    private int id;
     private Geometry geometry;
     private Map<String, String> properties;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public Geometry getGeometry() {
         return geometry;

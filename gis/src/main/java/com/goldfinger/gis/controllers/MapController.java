@@ -1,11 +1,12 @@
 package com.goldfinger.gis.controllers;
 
-import com.goldfinger.gis.models.Point;
 import com.goldfinger.gis.models.Shape;
 import com.goldfinger.gis.repositories.contracts.MapRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/map")
@@ -17,7 +18,7 @@ public class MapController {
     }
 
     @GetMapping
-    public Shape test(){
-         return mapRepository.getShape(new Point(), "Adf");
+    public List<Shape> test(){
+         return mapRepository.getAll( "soils");
     }
 }

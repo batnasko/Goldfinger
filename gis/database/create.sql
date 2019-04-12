@@ -40,3 +40,5 @@ select * from soils;
 select * from earthquakes;
 select * from datatypes;
 select * from dataProperties;
+
+SELECT * FROM earthquakes WHERE CONTAINS(SHAPE,Point(129.53,72.7));
