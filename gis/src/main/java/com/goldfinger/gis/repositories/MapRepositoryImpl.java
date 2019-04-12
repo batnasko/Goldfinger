@@ -1,7 +1,6 @@
 package com.goldfinger.gis.repositories;
 
-import com.goldfinger.gis.models.Point;
-import com.goldfinger.gis.models.Shape;
+import com.goldfinger.gis.models.*;
 import com.goldfinger.gis.repositories.contracts.MapRepository;
 import com.goldfinger.gis.repositories.helpers.ShapeParser;
 import com.vividsolutions.jts.io.ParseException;
@@ -35,20 +34,20 @@ public class MapRepositoryImpl implements MapRepository {
 
     @Override
     public List<Shape> getAll(String tableName) {
-        String sql = "SELECT * FROM ?;";
+        String sql = "SELECT * FROM " + tableName + ";";
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
-                PreparedStatement statement = prepareStatement(connection, sql, tableName);
+                Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(sql)
-        ){
+        ) {
             List<Shape> shapes = new ArrayList<>();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 shapes.add(shapeParser.parse(resultSet));
             }
             return shapes;
-        } catch(SQLException e){
+        } catch (SQLException e) {
             throw new ResourceAccessException(e.getMessage());
-        } catch(ParseException | IOException e){
+        } catch (ParseException | IOException e) {
             throw new IllegalArgumentException(FAILED_TO_PARSE_SHAPE);
         }
     }
@@ -61,27 +60,17 @@ public class MapRepositoryImpl implements MapRepository {
         String sql = "SELECT * FROM " + tableName + " WHERE CONTAINS(SHAPE,Point(" + point.getLatitude() + "," + point.getLongitude() + "));";
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
-                Statement statement=connection.createStatement();
+                Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(sql)
-        ){
+        ) {
             if (resultSet.next()) {
                 return shapeParser.parse(resultSet);
             }
             throw new ResourceAccessException(SHAPE_NOT_FOUND);
-        } catch(SQLException e){
+        } catch (SQLException e) {
             throw new ResourceAccessException(e.getMessage());
-        } catch(ParseException | IOException e){
+        } catch (ParseException | IOException e) {
             throw new IllegalArgumentException(FAILED_TO_PARSE_SHAPE);
         }
     }
-
-    private PreparedStatement prepareStatement(Connection connection,String query, String... parameters)throws SQLException{
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        for (int i = 1; i <= parameters.length; i++) {
-            preparedStatement.setString(i, parameters[i]);
-        }
-        return preparedStatement;
-    }
-
-
 }
