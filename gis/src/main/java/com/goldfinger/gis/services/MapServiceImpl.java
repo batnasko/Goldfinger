@@ -28,4 +28,9 @@ public class MapServiceImpl implements MapService {
         return mapRepository.getAllDataTypes();
     }
 
+    @Override
+    public List<String> getDataProperies(int dataTypeId) {
+        return mapRepository.getDataProperties(dataTypeId);
+    }
+
 }

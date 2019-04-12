@@ -31,10 +31,19 @@ public class MapController {
         }
     }
 
-    @GetMapping("/datatypes")
+    @GetMapping("/datatype")
     public List<DataType> getAllDataTypes(){
         try {
             return mapService.getAllDataTypes();
+        }catch (Exception e){
+            throw new NotImplementedException();
+        }
+    }
+
+    @GetMapping("/datatype/{dataTypeId}/property")
+    public List<String> getDataProperties(@PathVariable int dataTypeId){
+        try {
+            return mapService.getDataProperies(dataTypeId);
         }catch (Exception e){
             throw new NotImplementedException();
         }

@@ -1,5 +1,6 @@
 package com.goldfinger.gis.repositories.helpers;
 
+import com.goldfinger.gis.models.DataProperties;
 import com.goldfinger.gis.models.DataType;
 import com.goldfinger.gis.models.Shape;
 import com.vividsolutions.jts.geom.Geometry;
@@ -45,6 +46,7 @@ public class Parser {
 
         return dataType;
     }
+
 
     public Geometry parseGeometry(InputStream inputStream) throws IOException, ParseException {
 
