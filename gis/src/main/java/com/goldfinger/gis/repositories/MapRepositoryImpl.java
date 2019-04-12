@@ -74,4 +74,23 @@ public class MapRepositoryImpl implements MapRepository {
         }
     }
 
+    @Override
+    public List<DataType> getAllDataTypes() {
+        String sql = "SELECT * FROM dataTypes;";
+        try (
+                Connection connection = DriverManager.getConnection(dbUrl, username, password);
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql)
+        ) {
+            List<DataType> dataTypes = new ArrayList<>();
+            while (resultSet.next()) {
+                dataTypes.add(parser.dataType(resultSet));
+            }
+            return dataTypes;
+        } catch (SQLException e) {
+            throw new ResourceAccessException(e.getMessage());
+        }
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package com.goldfinger.gis.repositories.helpers;
 
+import com.goldfinger.gis.models.DataType;
 import com.goldfinger.gis.models.Shape;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
@@ -33,6 +34,16 @@ public class Parser {
         shape.setProperties(properties);
 
         return shape;
+    }
+
+    public DataType dataType(ResultSet resultSet)throws SQLException{
+        DataType dataType = new DataType();
+
+        dataType.setDataType(resultSet.getString("dataType"));
+        dataType.setId(resultSet.getInt("id"));
+        dataType.setTableName(resultSet.getString("tableName"));
+
+        return dataType;
     }
 
     public Geometry parseGeometry(InputStream inputStream) throws IOException, ParseException {
