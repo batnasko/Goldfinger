@@ -1,6 +1,7 @@
 package com.goldfinger.gis.controllers;
 
 import com.goldfinger.gis.models.Point;
+import com.goldfinger.gis.models.Shape;
 import com.goldfinger.gis.repositories.contracts.MapRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,7 @@ public class MapController {
     }
 
     @GetMapping
-    public void test(){
-         mapRepository.getShape(new Point(), "Adf");
+    public Shape test(){
+         return mapRepository.getShape(new Point(), "Adf");
     }
 }

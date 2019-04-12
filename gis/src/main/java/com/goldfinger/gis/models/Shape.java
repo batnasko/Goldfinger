@@ -1,12 +1,12 @@
 package com.goldfinger.gis.models;
 
 import com.vividsolutions.jts.geom.Geometry;
-import java.util.HashMap;
+import java.util.Map;
 
 public class Shape {
     private int id;
     private Geometry geometry;
-    private HashMap<String, String> properties;
+    private Map<String, String> properties;
 
     public int getId() {
         return id;
@@ -24,11 +24,11 @@ public class Shape {
         this.geometry = geometry;
     }
 
-    public HashMap<String, String> getProperties() {
+    public Map<String, String> getProperties() {
         return properties;
     }
 
-    public void setProperties(HashMap<String, String> properties) {
+    public void setProperties(Map<String, String> properties) {
         this.properties = properties;
     }
 }

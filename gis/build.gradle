@@ -20,4 +20,5 @@ dependencies {
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
 
     compile group: 'com.vividsolutions', name: 'jts', version: '1.13'
+    compile group: 'com.bedatadriven', name: 'jackson-datatype-jts', version: '2.4'
 }
