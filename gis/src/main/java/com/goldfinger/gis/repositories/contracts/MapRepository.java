@@ -12,5 +12,6 @@ public interface MapRepository {
     List<Shape> getAll(String tableName);
     Shape getShape(Point point, String tableName);
     List<DataType> getAllDataTypes();
+    DataType getDataType(int dataTypeId);
     List<String> getDataProperties(int dataTypeId);
 }

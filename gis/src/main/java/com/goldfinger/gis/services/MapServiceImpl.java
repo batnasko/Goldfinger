@@ -29,7 +29,7 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
-    public List<String> getDataProperies(int dataTypeId) {
+    public List<String> getDataProperties(int dataTypeId) {
         return mapRepository.getDataProperties(dataTypeId);
     }
 

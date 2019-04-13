@@ -20,6 +20,7 @@ import java.util.List;
 public class MapRepositoryImpl implements MapRepository {
 
     private static final String SHAPE_NOT_FOUND = "Shape not found";
+    private static final String DATA_TYPE_NOT_FOUND = "Data type not found";
     private static final String FAILED_TO_PARSE_SHAPE = "Failed to parseShape shape binary to Geometry";
 
     private String dbUrl, username, password;
@@ -88,6 +89,23 @@ public class MapRepositoryImpl implements MapRepository {
                 dataTypes.add(parser.dataType(resultSet));
             }
             return dataTypes;
+        } catch (SQLException e) {
+            throw new ResourceAccessException(e.getMessage());
+        }
+    }
+
+    @Override
+    public DataType getDataType(int dataTypeId) {
+        String sql = "SELECT * FROM dataTypes WHERE id = "+dataTypeId+";";
+        try (
+                Connection connection = DriverManager.getConnection(dbUrl, username, password);
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql)
+        ) {
+            if (resultSet.next()){
+                return parser.dataType(resultSet);
+            }
+            throw new ResourceAccessException(DATA_TYPE_NOT_FOUND);
         } catch (SQLException e) {
             throw new ResourceAccessException(e.getMessage());
         }

@@ -43,7 +43,7 @@ public class MapController {
     @GetMapping("/datatype/{dataTypeId}/property")
     public List<String> getDataProperties(@PathVariable int dataTypeId){
         try {
-            return mapService.getDataProperies(dataTypeId);
+            return mapService.getDataProperties(dataTypeId);
         }catch (Exception e){
             throw new NotImplementedException();
         }

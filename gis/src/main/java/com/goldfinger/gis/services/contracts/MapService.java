@@ -8,5 +8,5 @@ import java.util.List;
 public interface MapService {
     List<Shape> getAllShapes(int dataTypeId);
     List<DataType> getAllDataTypes();
-    List<String> getDataProperies(int dataTypeId);
+    List<String> getDataProperties(int dataTypeId);
 }
