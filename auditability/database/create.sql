@@ -5,9 +5,6 @@ USE goldfingerauditability;
 
 CREATE TABLE logs(
 	id INT NOT NULL AUTO_INCREMENT,
-    username VARCHAR(80) NOT NULL,
-    ip VARCHAR(30) NOT NULL,
-    event_time TIMESTAMP NOT NULL,
     message VARCHAR(200) NOT NULL,
     PRIMARY KEY(id)
 );
