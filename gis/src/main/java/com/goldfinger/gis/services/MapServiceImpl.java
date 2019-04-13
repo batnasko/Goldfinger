@@ -5,9 +5,9 @@ import com.goldfinger.gis.models.Point;
 import com.goldfinger.gis.models.Shape;
 import com.goldfinger.gis.repositories.contracts.MapRepository;
 import com.goldfinger.gis.services.contracts.MapService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
 
@@ -16,6 +16,7 @@ public class MapServiceImpl implements MapService {
 
     private MapRepository mapRepository;
 
+    @Autowired
     public MapServiceImpl(MapRepository mapRepository){
         this.mapRepository = mapRepository;
     }
@@ -26,7 +27,7 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
-    public List<DataType> getAllDataTypes() {
+    public List<DataType> getAllDataTypes()throws ResourceAccessException {
         return mapRepository.getAllDataTypes();
     }
 
