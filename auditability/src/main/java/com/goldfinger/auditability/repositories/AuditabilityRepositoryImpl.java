@@ -1,4 +1,8 @@
 package com.goldfinger.auditability.repositories;
 
-public class AuditabilityRepositoryImpl {
+import com.goldfinger.auditability.repositories.contracts.AuditabilityRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class AuditabilityRepositoryImpl implements AuditabilityRepository {
 }
