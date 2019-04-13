@@ -18,6 +18,7 @@ import java.util.List;
 @Repository
 @PropertySource("classpath:application.properties")
 public class MapRepositoryImpl implements MapRepository {
+
     private static final String SHAPE_NOT_FOUND = "Shape not found";
     private static final String FAILED_TO_PARSE_SHAPE = "Failed to parseShape shape binary to Geometry";
 
@@ -87,6 +88,24 @@ public class MapRepositoryImpl implements MapRepository {
                 dataTypes.add(parser.dataType(resultSet));
             }
             return dataTypes;
+        } catch (SQLException e) {
+            throw new ResourceAccessException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<String> getDataProperties(int dataTypeId) {
+        String sql = "SELECT PROPERTY FROM dataproperties WHERE dataType_id = " + dataTypeId;
+        try (
+                Connection connection = DriverManager.getConnection(dbUrl, username, password);
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql)
+        ) {
+            List<String> dataProperties = new ArrayList<>();
+            while (resultSet.next()) {
+                dataProperties.add(resultSet.getString("property"));
+            }
+            return dataProperties;
         } catch (SQLException e) {
             throw new ResourceAccessException(e.getMessage());
         }

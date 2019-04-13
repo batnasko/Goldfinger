@@ -1,5 +1,6 @@
 package com.goldfinger.gis.services;
 
+import com.goldfinger.gis.models.DataType;
 import com.goldfinger.gis.models.Shape;
 import com.goldfinger.gis.repositories.contracts.MapRepository;
 import com.goldfinger.gis.services.contracts.MapService;
@@ -21,4 +22,15 @@ public class MapServiceImpl implements MapService {
     public List<Shape> getAllShapes(int dataTypeId) {
         throw new NotImplementedException();
     }
+
+    @Override
+    public List<DataType> getAllDataTypes() {
+        return mapRepository.getAllDataTypes();
+    }
+
+    @Override
+    public List<String> getDataProperies(int dataTypeId) {
+        return mapRepository.getDataProperties(dataTypeId);
+    }
+
 }

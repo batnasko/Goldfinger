@@ -1,11 +1,20 @@
 package com.goldfinger.gis.repositories.helpers;
 
-import com.goldfinger.gis.models.*;
+import com.goldfinger.gis.models.DataProperties;
+import com.goldfinger.gis.models.DataType;
+import com.goldfinger.gis.models.Shape;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.*;
-import java.io.*;
-import java.sql.*;
-import java.util.*;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKBReader;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Parser {
 
@@ -37,6 +46,7 @@ public class Parser {
 
         return dataType;
     }
+
 
     public Geometry parseGeometry(InputStream inputStream) throws IOException, ParseException {
 

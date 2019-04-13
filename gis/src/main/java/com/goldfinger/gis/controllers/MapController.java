@@ -1,6 +1,7 @@
 package com.goldfinger.gis.controllers;
 
 
+import com.goldfinger.gis.models.DataType;
 import com.goldfinger.gis.models.Shape;
 import com.goldfinger.gis.services.contracts.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,24 @@ public class MapController {
             return mapService.getAllShapes(dataTypeId);
         }
         catch (Exception e){
+            throw new NotImplementedException();
+        }
+    }
+
+    @GetMapping("/datatype")
+    public List<DataType> getAllDataTypes(){
+        try {
+            return mapService.getAllDataTypes();
+        }catch (Exception e){
+            throw new NotImplementedException();
+        }
+    }
+
+    @GetMapping("/datatype/{dataTypeId}/property")
+    public List<String> getDataProperties(@PathVariable int dataTypeId){
+        try {
+            return mapService.getDataProperies(dataTypeId);
+        }catch (Exception e){
             throw new NotImplementedException();
         }
     }
