@@ -1,19 +1,11 @@
 package com.goldfinger.gis.repositories.helpers;
 
-import com.goldfinger.gis.models.DataType;
-import com.goldfinger.gis.models.Shape;
+import com.goldfinger.gis.models.*;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKBReader;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import com.vividsolutions.jts.io.*;
+import java.io.*;
+import java.sql.*;
+import java.util.*;
 
 public class Parser {
 
