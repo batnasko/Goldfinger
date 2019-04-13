@@ -21,40 +21,45 @@ public class MapController {
     private MapService mapService;
 
     @Autowired
-    public MapController(MapService mapService){
+    public MapController(MapService mapService) {
         this.mapService = mapService;
     }
 
+    @GetMapping("/datatype")
+    public List<DataType> getAllDataTypes() {
+        try {
+            return mapService.getAllDataTypes();
+        } catch (ResourceAccessException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
     @GetMapping("/{dataTypeId}")
-    public List<Shape> getAllShapes(@PathVariable int dataTypeId){
+    public List<Shape> getAllShapes(@PathVariable int dataTypeId) {
         try {
             return mapService.getAllShapes(dataTypeId);
-        }
-        catch (ResourceAccessException e){
+        } catch (ResourceAccessException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
     @PostMapping("/{dataTypeId}")
-    public Shape getShape(@PathVariable int dataTypeId,@RequestBody Point point){
-        throw new NotImplementedException();
-    }
-
-    @GetMapping("/datatype/{dataTypeId}/property")
-    public List<String> getDataProperties(@PathVariable int dataTypeId){
+    public Shape getShape(@PathVariable int dataTypeId, @RequestBody Point point) {
         try {
-            return mapService.getDataProperties(dataTypeId);
-        }catch (Exception e){
-            throw new NotImplementedException();
+            return mapService.getShape(point, dataTypeId);
+        } catch (ResourceAccessException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
-    @GetMapping("/datatype")
-    public List<DataType> getAllDataTypes(){
+    @GetMapping("/datatype/{dataTypeId}/property")
+    public List<String> getDataProperties(@PathVariable int dataTypeId) {
         try {
-            return mapService.getAllDataTypes();
-        }catch (Exception e){
-            throw new NotImplementedException();
+            return mapService.getDataProperties(dataTypeId);
+        } catch (ResourceAccessException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
