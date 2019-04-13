@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Map</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+          integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+          crossorigin=""/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+            integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+            crossorigin="">
+
+    </script>
+
+
+    <style>
+        .map-container{
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        #mapid {
+            height: 800px;
+            width: 100%;
+            vertical-align: top;
+        }
+    </style>
+</head>
+<body>
+<div class="map-container">
+    <div id="mapid"></div>
+</div>
+
+<script>
+    var mymap = L.map('mapid').setView([34, -98], 13);
+
+    mymap.on("dblclick", function (ev) {
+        console.log("vliza v zaqvkata");
+        var latlng = mymap.mouseEventToLatLng(ev.originalEvent);
+        $.ajax({
+            url: "http://localhost:9000/map/1",
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "latitude" : latlng.lng,
+                "longitude" : latlng.lat
+            }),
+            success: function (data) {
+                console.log("chaertaneto")
+                var latlngs = [];
+                let coordinates = data.geometry.coordinates;
+                for (let i = 0; i < coordinates.length; i++) {
+                    latlngs.push([coordinates[i][1], coordinates[i][0]]);
+                }
+                let polygon = L.polygon(latlngs, {color:'red'});
+                polygon.addTo(mymap);
+            },
+            error: function (xhr) {
+                console.log(xhr.responseText)
+            }
+        });
+    });
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        id: 'mapbox.streets'
+    }).addTo(mymap);
+    mymap.doubleClickZoom.disable();
+    var popup = L.popup();
+
+    function onMapClick(e) {
+        popup
+            .setLatLng(e.latlng)
+            .setContent(e.latlng.toString())
+            .openOn(mymap);
+    }
+
+
+
+</script>
+</body>
+</html>
