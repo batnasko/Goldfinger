@@ -1,17 +1,13 @@
 package com.goldfinger.gis.controllers;
 
 
-import com.goldfinger.gis.models.DataType;
-import com.goldfinger.gis.models.Point;
-import com.goldfinger.gis.models.Shape;
+import com.goldfinger.gis.models.*;
 import com.goldfinger.gis.services.contracts.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.server.ResponseStatusException;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.List;
 
 
@@ -34,7 +30,7 @@ public class MapController {
         }
     }
 
-    @GetMapping("/{dataTypeId}")
+    @GetMapping("/shape/{dataTypeId}")
     public List<Shape> getAllShapes(@PathVariable int dataTypeId) {
         try {
             return mapService.getAllShapes(dataTypeId);
@@ -43,7 +39,7 @@ public class MapController {
         }
     }
 
-    @PostMapping("/{dataTypeId}")
+    @PostMapping("/shape/{dataTypeId}")
     public Shape getShape(@PathVariable int dataTypeId, @RequestBody Point point) {
         try {
             return mapService.getShape(point, dataTypeId);
