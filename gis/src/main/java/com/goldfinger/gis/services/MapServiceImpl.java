@@ -32,8 +32,8 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
-    public List<String> getDataProperties(int dataTypeId) {
-        return mapRepository.getDataProperties(dataTypeId);
+    public List<String> getDataProperties(int dataTypeId) throws ResourceAccessException{
+        return mapRepository.getDataProperties(mapRepository.getDataType(dataTypeId).getId());
     }
 
     @Override
