@@ -1,10 +1,12 @@
 package com.goldfinger.gis.services;
 
 import com.goldfinger.gis.models.DataType;
+import com.goldfinger.gis.models.Point;
 import com.goldfinger.gis.models.Shape;
 import com.goldfinger.gis.repositories.contracts.MapRepository;
 import com.goldfinger.gis.services.contracts.MapService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
@@ -19,8 +21,8 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
-    public List<Shape> getAllShapes(int dataTypeId) {
-        throw new NotImplementedException();
+    public List<Shape> getAllShapes(int dataTypeId)throws ResourceAccessException {
+        return mapRepository.getAll(mapRepository.getDataType(dataTypeId).getTableName());
     }
 
     @Override
@@ -31,6 +33,11 @@ public class MapServiceImpl implements MapService {
     @Override
     public List<String> getDataProperties(int dataTypeId) {
         return mapRepository.getDataProperties(dataTypeId);
+    }
+
+    @Override
+    public Shape getShape(Point point, int dataTypeId)throws ResourceAccessException, IllegalArgumentException {
+        return mapRepository.getShape(point, mapRepository.getDataType(dataTypeId).getTableName());
     }
 
 }

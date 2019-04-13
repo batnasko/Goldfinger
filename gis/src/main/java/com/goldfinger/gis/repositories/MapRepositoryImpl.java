@@ -56,9 +56,6 @@ public class MapRepositoryImpl implements MapRepository {
 
     @Override
     public Shape getShape(Point point, String tableName) {
-        tableName = "soils";
-        point.setLatitude(-155.655135);
-        point.setLongitude(19.883514);
         String sql = "SELECT * FROM " + tableName + " WHERE CONTAINS(SHAPE,Point(" + point.getLatitude() + "," + point.getLongitude() + "));";
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
