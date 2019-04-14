@@ -1,5 +1,6 @@
 package com.goldfinger.auditability.controllers;
 
+import com.goldfinger.auditability.models.Export;
 import com.goldfinger.auditability.services.contracts.AuditabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,16 @@ public class AuditabilityController {
             auditabilityService.addLog(log);
         } catch (ResourceAccessException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    @PostMapping("/csv")
+    public String exportLogsToCvs(@RequestBody Export export){
+        try {
+            return auditabilityService.exportLogsToCSV(export);
+        }
+        catch (IllegalArgumentException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 }
