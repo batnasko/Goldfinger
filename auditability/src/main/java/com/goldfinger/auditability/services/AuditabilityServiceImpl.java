@@ -21,7 +21,6 @@ public class AuditabilityServiceImpl implements AuditabilityService {
     @Override
     public boolean addLog(HashMap<String, String> log) {
         long logId = auditabilityRepository.addNewLog();
-        System.out.println(logId);
         for (Map.Entry<String, String> entry : log.entrySet()) {
             auditabilityRepository.addKeyValuePair(logId, entry.getKey(), entry.getValue());
             String[] valueWords = entry.getValue().split(" ");
