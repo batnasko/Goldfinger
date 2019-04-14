@@ -5,6 +5,7 @@ import com.goldfinger.auditability.models.Export;
 import com.goldfinger.auditability.models.SearchFilter;
 import com.goldfinger.auditability.repositories.contracts.AuditabilityRepository;
 import com.goldfinger.auditability.services.contracts.AuditabilityService;
+import com.goldfinger.auditability.services.helpers.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -15,11 +16,15 @@ import java.util.Map;
 
 @Service
 public class AuditabilityServiceImpl implements AuditabilityService {
+    private static final String NO_COLUMNS_TO_EXPORT = "Please enter columns to export";
+
     private AuditabilityRepository auditabilityRepository;
+    private Parser parser;
 
     @Autowired
     public AuditabilityServiceImpl(AuditabilityRepository auditabilityRepository) {
         this.auditabilityRepository = auditabilityRepository;
+        this.parser = new Parser();
     }
 
     @Override
@@ -32,11 +37,10 @@ public class AuditabilityServiceImpl implements AuditabilityService {
                 long wordId;
                 try {
                     wordId = auditabilityRepository.getWordId(word);
-                }
-                catch (IllegalArgumentException e){
+                } catch (IllegalArgumentException e) {
                     wordId = auditabilityRepository.addWord(word);
                 }
-                auditabilityRepository.addWordLogRelation(wordId,logId);
+                auditabilityRepository.addWordLogRelation(wordId, logId);
             }
         }
         return true;
@@ -49,6 +53,9 @@ public class AuditabilityServiceImpl implements AuditabilityService {
 
     @Override
     public String exportLogsToCSV(Export export) {
-        return null;
+        if (export.getColumnsToExport() == null || export.getColumnsToExport().length == 0) {
+            throw new IllegalArgumentException(NO_COLUMNS_TO_EXPORT);
+        }
+        return parser.logsToCSV(getLogs(export.getSearchFilter()), export.getColumnsToExport());
     }
 }
