@@ -1,8 +1,5 @@
 package com.goldfinger.auditability.controllers;
 
-
-import com.goldfinger.auditability.repositories.AuditabilityRepositoryImpl;
-import com.goldfinger.auditability.services.AuditabilityServiceImpl;
 import com.goldfinger.auditability.services.contracts.AuditabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

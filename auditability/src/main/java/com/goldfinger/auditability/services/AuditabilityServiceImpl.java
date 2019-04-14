@@ -1,12 +1,16 @@
 package com.goldfinger.auditability.services;
 
 
+import com.goldfinger.auditability.models.Export;
+import com.goldfinger.auditability.models.SearchFilter;
 import com.goldfinger.auditability.repositories.contracts.AuditabilityRepository;
 import com.goldfinger.auditability.services.contracts.AuditabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -36,5 +40,15 @@ public class AuditabilityServiceImpl implements AuditabilityService {
             }
         }
         return true;
+    }
+
+    @Override
+    public List<Map<String, String>> getLogs(SearchFilter searchFilter) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String exportLogsToCSV(Export export) {
+        return null;
     }
 }
