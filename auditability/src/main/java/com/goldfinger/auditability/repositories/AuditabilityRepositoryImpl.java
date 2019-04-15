@@ -10,10 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Repository
@@ -153,14 +150,14 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
     }
 
     @Override
-    public List<Integer> wordOccurrences(String wordsToSearch) {
+    public Set<Integer> wordOccurrences(String wordsToSearch) {
         String sql = "SELECT distinct log_id from word_log join words on word_id = words.id where word = '"+ wordsToSearch+"';";
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(sql);
         ) {
-            List<Integer> logs = new ArrayList<>();
+            Set<Integer> logs = new HashSet<>();
             while (resultSet.next()){
                 logs.add(resultSet.getInt("log_id"));
             }

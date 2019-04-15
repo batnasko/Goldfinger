@@ -4,6 +4,7 @@ import com.goldfinger.auditability.models.Filter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface AuditabilityRepository {
     long addNewLog();
@@ -20,7 +21,7 @@ public interface AuditabilityRepository {
 
     List<Integer> getAllLogs(Filter filter);
 
-    List<Integer> wordOccurrences(String wordsToSearch);
+    Set<Integer> wordOccurrences(String wordsToSearch);
 
     List<Integer> searchPhrase(String phrase, Filter filter);
 
