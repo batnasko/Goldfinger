@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class AuditabilityServiceImpl implements AuditabilityService {
@@ -50,7 +47,7 @@ public class AuditabilityServiceImpl implements AuditabilityService {
     @Override
     public List<Map<String, String>> getLogs(SearchFilter searchFilter) {
         String search = searchFilter.getSearch();
-        List<Integer> logIds;
+        List<Integer> logIds = new ArrayList<>();
 
         if (search ==null){
             logIds = auditabilityRepository.getAllLogs(searchFilter.getFilter());
@@ -68,7 +65,30 @@ public class AuditabilityServiceImpl implements AuditabilityService {
             logIds = auditabilityRepository.searchPhrase(search, searchFilter.getFilter());
         }
         else {
-            throw new NotImplementedException();
+            search = search.trim();
+            String[] words = search.split(" ");
+            Set<Integer> allLogs = new HashSet<>();
+            List<List<Integer>> logsOccurrence= new ArrayList<>();
+            List<Set<Integer>> logsByWord= new ArrayList<>();
+            for (int i = 0; i < words.length; i++) {
+                logsOccurrence.add(new ArrayList<>());
+                logsByWord.add(auditabilityRepository.wordOccurrences(words[i]));
+                allLogs.addAll(logsByWord.get(i));
+            }
+
+            for (Integer log:allLogs){
+                int logCount = 0;
+                for (Set<Integer> logs : logsByWord){
+                    if (logs.contains(log)){
+                        logCount++;
+                    }
+                }
+                logsOccurrence.get(logCount-1).add(log);
+            }
+
+            for (int i = logsOccurrence.size() - 1; i >=0; i--) {
+                logIds.addAll(logsOccurrence.get(i));
+            }
         }
 
         List<Map<String, String>> logs = new ArrayList<>();
