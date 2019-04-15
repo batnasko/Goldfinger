@@ -1,5 +1,6 @@
 package com.goldfinger.auditability.repositories;
 
+import com.goldfinger.auditability.models.Filter;
 import com.goldfinger.auditability.repositories.contracts.AuditabilityRepository;
 import com.goldfinger.auditability.repositories.helpers.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -121,6 +124,91 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
                 Statement statement = connection.createStatement()
         ) {
            return statement.execute(sql);
+        } catch (SQLException e) {
+            throw new ResourceAccessException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Integer> getAllLogs(Filter filter) {
+
+        String sql = "SELECT distinct log_id from pairs";
+        if (filter != null){
+            sql += "where key_ = '"+ filter.getSortBy()+ "' ORDER BY value_ " + filter.getOrder() + ";";
+        }
+        try (
+                Connection connection = DriverManager.getConnection(dbUrl, username, password);
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql);
+        ) {
+            List<Integer> logs = new ArrayList<>();
+            while (resultSet.next()){
+                logs.add(resultSet.getInt("log_id"));
+            }
+            return logs;
+        } catch (SQLException e) {
+            throw new ResourceAccessException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Integer> searchPhrase(String phrase, Filter filter) {
+        String sql = "SELECT distinct log_id from pairs WHERE log_id IN (SELECT log_id from pairs where value_ like '%" + phrase +"%')";
+        if (filter != null){
+            sql += "and key_ = '"+ filter.getSortBy()+ "' ORDER BY value_ " + filter.getOrder() + ";";
+        }
+        try (
+                Connection connection = DriverManager.getConnection(dbUrl, username, password);
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql);
+        ) {
+            List<Integer> logs = new ArrayList<>();
+            while (resultSet.next()){
+                logs.add(resultSet.getInt("log_id"));
+            }
+            return logs;
+        } catch (SQLException e) {
+            throw new ResourceAccessException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Integer> searchWordInPair(String key, String value, Filter filter) {
+        String sql = "SELECT distinct log_id from pairs WHERE log_id IN (SELECT log_id from pairs where key_ = '"+ key +"' AND value_ like '%" + value +"%')";
+        if (filter != null){
+            sql += "and key_ = '"+ filter.getSortBy()+ "' ORDER BY value_ " + filter.getOrder() + ";";
+        }
+        try (
+                Connection connection = DriverManager.getConnection(dbUrl, username, password);
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql);
+        ) {
+            List<Integer> logs = new ArrayList<>();
+            while (resultSet.next()){
+                logs.add(resultSet.getInt("log_id"));
+            }
+            return logs;
+        } catch (SQLException e) {
+            throw new ResourceAccessException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Integer> searchExactTextInPairs(String key, String value, Filter filter) {
+        String sql = "SELECT distinct log_id from pairs WHERE log_id IN (SELECT log_id from pairs where key_ = '"+ key +"' AND value_ = '" + value +"')";
+        if (filter != null){
+            sql += "and key_ = '"+ filter.getSortBy()+ "' ORDER BY value_ " + filter.getOrder() + ";";
+        }
+        try (
+                Connection connection = DriverManager.getConnection(dbUrl, username, password);
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql);
+        ) {
+            List<Integer> logs = new ArrayList<>();
+            while (resultSet.next()){
+                logs.add(resultSet.getInt("log_id"));
+            }
+            return logs;
         } catch (SQLException e) {
             throw new ResourceAccessException(e.getMessage());
         }
