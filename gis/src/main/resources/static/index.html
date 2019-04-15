@@ -51,15 +51,18 @@
                 "longitude" : latlng.lat
             }),
             success: function (data) {
-                var latlngs = [];
-                let coordinates = data.geometry.coordinates;
-                console.log(JSON.stringify(coordinates));
-                for (let i = 0; i < coordinates[0].length; i++) {
-                    console.log(coordinates[0][i]);
-                    latlngs.push([coordinates[0][i][1], coordinates[0][i][0]]);
-                }
-                let polygon = L.polygon(latlngs, {color:'red'});
-                polygon.addTo(mymap);
+                var myLayer = L.geoJSON().addTo(mymap);
+                myLayer.addData(data.geometry);
+
+                // var latlngs = [];
+                // let coordinates = data.geometry.coordinates;
+                // console.log(JSON.stringify(coordinates));
+                // for (let i = 0; i < coordinates[0].length; i++) {
+                //     console.log(coordinates[0][i]);
+                //     latlngs.push([coordinates[0][i][1], coordinates[0][i][0]]);
+                // }
+                // let polygon = L.polygon(latlngs, {color:'red'});
+                // polygon.addTo(mymap);
 
             },
             error: function (xhr) {
