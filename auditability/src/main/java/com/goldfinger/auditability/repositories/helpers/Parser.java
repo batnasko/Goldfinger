@@ -13,4 +13,6 @@ public class Parser {
         } while (resultSet.next());
         return log;
     }
+
+
 }

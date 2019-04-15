@@ -20,7 +20,8 @@ public interface AuditabilityRepository {
 
     List<Integer> getAllLogs(Filter filter);
 
-    //    List<Integer> searchFullText(Filter filter, String[] wordsToSearch);
+    List<Integer> wordOccurrences(String wordsToSearch);
+
     List<Integer> searchPhrase(String phrase, Filter filter);
 
     List<Integer> searchWordInPair(String key, String value, Filter filter);

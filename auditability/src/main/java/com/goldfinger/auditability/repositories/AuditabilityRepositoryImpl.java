@@ -11,6 +11,7 @@ import org.springframework.web.client.ResourceAccessException;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -136,6 +137,24 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
         if (filter != null){
             sql += "where key_ = '"+ filter.getSortBy()+ "' ORDER BY value_ " + filter.getOrder() + ";";
         }
+        try (
+                Connection connection = DriverManager.getConnection(dbUrl, username, password);
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql);
+        ) {
+            List<Integer> logs = new ArrayList<>();
+            while (resultSet.next()){
+                logs.add(resultSet.getInt("log_id"));
+            }
+            return logs;
+        } catch (SQLException e) {
+            throw new ResourceAccessException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Integer> wordOccurrences(String wordsToSearch) {
+        String sql = "SELECT distinct log_id from word_log join words on word_id = words.id where word = '"+ wordsToSearch+"';";
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
                 Statement statement = connection.createStatement();
