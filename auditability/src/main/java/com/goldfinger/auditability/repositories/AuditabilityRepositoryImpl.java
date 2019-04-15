@@ -1,6 +1,7 @@
 package com.goldfinger.auditability.repositories;
 
 import com.goldfinger.auditability.repositories.contracts.AuditabilityRepository;
+import com.goldfinger.auditability.repositories.helpers.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.sql.*;
+import java.util.Map;
 
 
 @Repository
@@ -15,14 +17,17 @@ import java.sql.*;
 public class AuditabilityRepositoryImpl implements AuditabilityRepository {
     private static final String COULDNT_INSERT_LOG_ID = "Couldn't insert new log id";
     private static final String COULDNT_INSERT_WORD = "Couldn't insert new word";
+    private static final String LOG_NOT_FOUND = "Log not found";
 
     private String dbUrl, username, password;
+    private Parser parser;
 
     @Autowired
     public AuditabilityRepositoryImpl(Environment environment) {
         dbUrl = environment.getProperty("database.url.jdbc");
         username = environment.getProperty("database.username");
         password = environment.getProperty("database.password");
+        parser = new Parser();
     }
 
     @Override
@@ -41,6 +46,23 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
             throw new ResourceAccessException(e.getMessage());
         }
 
+    }
+
+    @Override
+    public Map<String, String> getLog(long logId) {
+        String sql = "SELECT * FROM pairs WHERE log_id = " + logId + ";";
+        try (
+                Connection connection = DriverManager.getConnection(dbUrl, username, password);
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql);
+        ) {
+            if (resultSet.next()){
+                return parser.log(resultSet);
+            }
+            throw new ResourceAccessException(LOG_NOT_FOUND);
+        } catch (SQLException e) {
+            throw new ResourceAccessException(e.getMessage());
+        }
     }
 
     @Override

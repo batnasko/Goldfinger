@@ -8,8 +8,7 @@ import com.goldfinger.auditability.services.contracts.AuditabilityService;
 import com.goldfinger.auditability.services.helpers.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,9 @@ public class AuditabilityServiceImpl implements AuditabilityService {
 
     @Override
     public List<Map<String, String>> getLogs(SearchFilter searchFilter) {
-        throw new NotImplementedException();
+        List<Map<String,String>> list = new ArrayList<>();
+        list.add(auditabilityRepository.getLog(2));
+        return list;
     }
 
     @Override
