@@ -8,7 +8,6 @@ import com.goldfinger.auditability.services.contracts.AuditabilityService;
 import com.goldfinger.auditability.services.helpers.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 
@@ -49,51 +48,48 @@ public class AuditabilityServiceImpl implements AuditabilityService {
         String search = searchFilter.getSearch();
         List<Integer> logIds = new ArrayList<>();
 
-        if (search ==null){
+        if (search == null) {
             logIds = auditabilityRepository.getAllLogs(searchFilter.getFilter());
-        } else if (search.contains("=")){
+        } else if (search.contains("=")) {
             String[] searchSplit = search.split("=");
-            logIds = auditabilityRepository.searchExactTextInPairs(searchSplit[0].trim(),searchSplit[1].trim(),searchFilter.getFilter());
-        }
-        else if (search.contains(":")){
+            logIds = auditabilityRepository.searchExactTextInPairs(searchSplit[0].trim(), searchSplit[1].trim(), searchFilter.getFilter());
+        } else if (search.contains(":")) {
             String[] searchSplit = search.split(":");
-            logIds = auditabilityRepository.searchWordInPair(searchSplit[0].trim(),searchSplit[1].trim(),searchFilter.getFilter());
-        }
-        else if (search.startsWith("\"") && search.endsWith("\"")){
+            logIds = auditabilityRepository.searchWordInPair(searchSplit[0].trim(), searchSplit[1].trim(), searchFilter.getFilter());
+        } else if (search.startsWith("\"") && search.endsWith("\"")) {
             search = search.trim();
-            search = search.substring(1,search.length()-1);
+            search = search.substring(1, search.length() - 1);
             logIds = auditabilityRepository.searchPhrase(search, searchFilter.getFilter());
-        }
-        else {
+        } else {
             search = search.trim();
             String[] words = search.split(" ");
             Set<Integer> allLogs = new HashSet<>();
-            List<List<Integer>> logsOccurrence= new ArrayList<>();
-            List<Set<Integer>> logsByWord= new ArrayList<>();
+            List<List<Integer>> logsOccurrence = new ArrayList<>();
+            List<Set<Integer>> logsByWord = new ArrayList<>();
             for (int i = 0; i < words.length; i++) {
                 logsOccurrence.add(new ArrayList<>());
                 logsByWord.add(auditabilityRepository.wordOccurrences(words[i]));
                 allLogs.addAll(logsByWord.get(i));
             }
 
-            for (Integer log:allLogs){
+            for (Integer log : allLogs) {
                 int logCount = 0;
-                for (Set<Integer> logs : logsByWord){
-                    if (logs.contains(log)){
+                for (Set<Integer> logs : logsByWord) {
+                    if (logs.contains(log)) {
                         logCount++;
                     }
                 }
-                logsOccurrence.get(logCount-1).add(log);
+                logsOccurrence.get(logCount - 1).add(log);
             }
 
-            for (int i = logsOccurrence.size() - 1; i >=0; i--) {
+            for (int i = logsOccurrence.size() - 1; i >= 0; i--) {
                 logIds.addAll(logsOccurrence.get(i));
             }
         }
 
         List<Map<String, String>> logs = new ArrayList<>();
 
-        for (Integer logId : logIds){
+        for (Integer logId : logIds) {
             logs.add(auditabilityRepository.getLog(logId));
         }
 
