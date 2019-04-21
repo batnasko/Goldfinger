@@ -34,19 +34,7 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
     @Override
     public long addNewLog() {
         String sql = "INSERT INTO logs VALUES() ;";
-        try (
-                Connection connection = DriverManager.getConnection(dbUrl, username, password);
-                PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ResultSet resultSet = getGeneratedKeys(statement)
-        ) {
-            if (resultSet.next()) {
-                return resultSet.getLong(1);
-            }
-            throw new ResourceAccessException(COULDNT_INSERT_LOG_ID);
-        } catch (SQLException e) {
-            throw new ResourceAccessException(e.getMessage());
-        }
-
+        return executeQueryAndReturnGeneratedId(sql,COULDNT_INSERT_LOG_ID);
     }
 
     @Override
@@ -55,9 +43,9 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
                 Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sql);
+                ResultSet resultSet = statement.executeQuery(sql)
         ) {
-            if (resultSet.next()){
+            if (resultSet.next()) {
                 return parser.log(resultSet);
             }
             throw new ResourceAccessException(LOG_NOT_FOUND);
@@ -88,7 +76,7 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(sql)
         ) {
-            if (resultSet.next()){
+            if (resultSet.next()) {
                 return resultSet.getLong("id");
             }
             throw new IllegalArgumentException();
@@ -99,29 +87,18 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
 
     @Override
     public long addWord(String word) {
-        String sql = "INSERT INTO words(word) VALUES('"+word+"');";
-        try (
-                Connection connection = DriverManager.getConnection(dbUrl, username, password);
-                PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                ResultSet resultSet = getGeneratedKeys(statement)
-        ) {
-            if (resultSet.next()) {
-                return resultSet.getLong(1);
-            }
-            throw new ResourceAccessException(COULDNT_INSERT_WORD);
-        } catch (SQLException e) {
-            throw new ResourceAccessException(e.getMessage());
-        }
+        String sql = "INSERT INTO words(word) VALUES('" + word + "');";
+        return executeQueryAndReturnGeneratedId(sql,COULDNT_INSERT_WORD);
     }
 
     @Override
     public boolean addWordLogRelation(long wordId, long logId) {
-        String sql = "INSERT INTO word_log(word_id, log_id) VALUES('"+wordId+"','"+logId+"');";
+        String sql = "INSERT INTO word_log(word_id, log_id) VALUES('" + wordId + "','" + logId + "');";
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
                 Statement statement = connection.createStatement()
         ) {
-           return statement.execute(sql);
+            return statement.execute(sql);
         } catch (SQLException e) {
             throw new ResourceAccessException(e.getMessage());
         }
@@ -129,36 +106,21 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
 
     @Override
     public List<Integer> getAllLogs(Filter filter) {
-
         String sql = "SELECT distinct log_id from pairs";
-        if (filter != null){
-            sql += "where key_ = '"+ filter.getSortBy()+ "' ORDER BY value_ " + filter.getOrder() + ";";
-        }
-        try (
-                Connection connection = DriverManager.getConnection(dbUrl, username, password);
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sql);
-        ) {
-            List<Integer> logs = new ArrayList<>();
-            while (resultSet.next()){
-                logs.add(resultSet.getInt("log_id"));
-            }
-            return logs;
-        } catch (SQLException e) {
-            throw new ResourceAccessException(e.getMessage());
-        }
+        sql = addOrderToQuery(sql, filter);
+        return executeSearchQuery(sql);
     }
 
     @Override
     public Set<Integer> wordOccurrences(String wordsToSearch) {
-        String sql = "SELECT distinct log_id from word_log join words on word_id = words.id where word = '"+ wordsToSearch+"';";
+        String sql = "SELECT distinct log_id from word_log join words on word_id = words.id where word = '" + wordsToSearch + "';";
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
                 Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sql);
+                ResultSet resultSet = statement.executeQuery(sql)
         ) {
             Set<Integer> logs = new HashSet<>();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 logs.add(resultSet.getInt("log_id"));
             }
             return logs;
@@ -169,59 +131,40 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
 
     @Override
     public List<Integer> searchPhrase(String phrase, Filter filter) {
-        String sql = "SELECT distinct log_id from pairs WHERE log_id IN (SELECT log_id from pairs where value_ like '%" + phrase +"%')";
-        if (filter != null){
-            sql += "and key_ = '"+ filter.getSortBy()+ "' ORDER BY value_ " + filter.getOrder() + ";";
-        }
-        try (
-                Connection connection = DriverManager.getConnection(dbUrl, username, password);
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sql);
-        ) {
-            List<Integer> logs = new ArrayList<>();
-            while (resultSet.next()){
-                logs.add(resultSet.getInt("log_id"));
-            }
-            return logs;
-        } catch (SQLException e) {
-            throw new ResourceAccessException(e.getMessage());
-        }
+        String sql = "SELECT distinct log_id from pairs WHERE log_id IN (SELECT log_id from pairs where value_ like '%" + phrase + "%')";
+        sql = addOrderToQuery(sql, filter);
+        return executeSearchQuery(sql);
     }
 
     @Override
     public List<Integer> searchWordInPair(String key, String value, Filter filter) {
-        String sql = "SELECT distinct log_id from pairs WHERE log_id IN (SELECT log_id from pairs where key_ = '"+ key +"' AND value_ like '%" + value +"%')";
-        if (filter != null){
-            sql += "and key_ = '"+ filter.getSortBy()+ "' ORDER BY value_ " + filter.getOrder() + ";";
-        }
-        try (
-                Connection connection = DriverManager.getConnection(dbUrl, username, password);
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sql);
-        ) {
-            List<Integer> logs = new ArrayList<>();
-            while (resultSet.next()){
-                logs.add(resultSet.getInt("log_id"));
-            }
-            return logs;
-        } catch (SQLException e) {
-            throw new ResourceAccessException(e.getMessage());
-        }
+        String sql = "SELECT distinct log_id from pairs WHERE log_id IN (SELECT log_id from pairs where key_ = '" + key + "' AND value_ like '%" + value + "%')";
+        sql = addOrderToQuery(sql, filter);
+        return executeSearchQuery(sql);
     }
 
     @Override
     public List<Integer> searchExactTextInPairs(String key, String value, Filter filter) {
-        String sql = "SELECT distinct log_id from pairs WHERE log_id IN (SELECT log_id from pairs where key_ = '"+ key +"' AND value_ = '" + value +"')";
-        if (filter != null){
-            sql += "and key_ = '"+ filter.getSortBy()+ "' ORDER BY value_ " + filter.getOrder() + ";";
+        String sql = "SELECT distinct log_id from pairs WHERE log_id IN (SELECT log_id from pairs where key_ = '" + key + "' AND value_ = '" + value + "')";
+        sql = addOrderToQuery(sql, filter);
+        return executeSearchQuery(sql);
+    }
+
+    private String addOrderToQuery(String sql, Filter filter) {
+        if (filter != null) {
+            sql += " and key_ = '" + filter.getSortBy() + "' ORDER BY value_ " + filter.getOrder() + ";";
         }
+        return sql;
+    }
+
+    private List<Integer> executeSearchQuery(String sql) {
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
                 Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sql);
+                ResultSet resultSet = statement.executeQuery(sql)
         ) {
             List<Integer> logs = new ArrayList<>();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 logs.add(resultSet.getInt("log_id"));
             }
             return logs;
@@ -230,6 +173,20 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
         }
     }
 
+    private long executeQueryAndReturnGeneratedId(String sql, String errorMsg){
+        try (
+                Connection connection = DriverManager.getConnection(dbUrl, username, password);
+                PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ResultSet resultSet = getGeneratedKeys(statement)
+        ) {
+            if (resultSet.next()) {
+                return resultSet.getLong(1);
+            }
+            throw new ResourceAccessException(errorMsg);
+        } catch (SQLException e) {
+            throw new ResourceAccessException(e.getMessage());
+        }
+    }
 
     private ResultSet getGeneratedKeys(PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.execute();

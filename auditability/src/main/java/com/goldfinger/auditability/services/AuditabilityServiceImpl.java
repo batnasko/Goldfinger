@@ -1,8 +1,7 @@
 package com.goldfinger.auditability.services;
 
 
-import com.goldfinger.auditability.models.Export;
-import com.goldfinger.auditability.models.SearchFilter;
+import com.goldfinger.auditability.models.*;
 import com.goldfinger.auditability.repositories.contracts.AuditabilityRepository;
 import com.goldfinger.auditability.services.contracts.AuditabilityService;
 import com.goldfinger.auditability.services.helpers.Parser;
