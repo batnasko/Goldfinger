@@ -13,6 +13,7 @@ CREATE TABLE dataTypes
     id INT NOT NULL AUTO_INCREMENT,
     dataType varchar(80) NOT NULL,
 	tableName varchar(80) NOT NULL,
+    row_to_color varchar(80) NOT NULL,
     PRIMARY KEY(id)
 );
 
@@ -27,8 +28,8 @@ CREATE TABLE dataProperties
 -- HAVE TO IMPLEMENT COLORS ????????????????????????????
 
 
-INSERT INTO dataTypes(dataType, tableName) VALUES ("Soil Types", "soils"),
-												  ("Earthquake Frequency", "earthquakes");
+INSERT INTO dataTypes(dataType, tableName, row_to_color) VALUES ("Soil Types", "soils", "domsoi"),
+												  ("Earthquake Frequency", "earthquakes", "dn");
                                                   
 INSERT INTO dataProperties(dataType_id, property) VALUES (1,"faosoil"),
 														 (1,"domsoi"),

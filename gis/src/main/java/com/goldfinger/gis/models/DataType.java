@@ -5,6 +5,7 @@ public class DataType {
     private int id;
     private String dataType;
     private String tableName;
+    private String rowToColor;
 
     public int getId() {
         return id;
@@ -28,5 +29,13 @@ public class DataType {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    public String getRowToColor() {
+        return rowToColor;
+    }
+
+    public void setRowToColor(String rowToColor) {
+        this.rowToColor = rowToColor;
     }
 }

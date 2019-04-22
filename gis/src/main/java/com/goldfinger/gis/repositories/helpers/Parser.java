@@ -34,12 +34,13 @@ public class Parser {
         dataType.setDataType(resultSet.getString("dataType"));
         dataType.setId(resultSet.getInt("id"));
         dataType.setTableName(resultSet.getString("tableName"));
+        dataType.setRowToColor(resultSet.getString("row_to_color"));
 
         return dataType;
     }
 
 
-    public Geometry parseGeometry(InputStream inputStream) throws IOException, ParseException {
+    private Geometry parseGeometry(InputStream inputStream) throws IOException, ParseException {
 
         Geometry dbGeometry = null;
 
@@ -49,7 +50,7 @@ public class Parser {
             //so it can be passed to the WKBReader
             byte[] buffer = new byte[255];
 
-            int bytesRead = 0;
+            int bytesRead;
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             while ((bytesRead = inputStream.read(buffer)) != -1) {
                 baos.write(buffer, 0, bytesRead);
@@ -70,8 +71,8 @@ public class Parser {
 
             int srid = 0;
             if (bigEndian) {
-                for (int i = 0; i < sridBytes.length; i++) {
-                    srid = (srid << 8) + (sridBytes[i] & 0xff);
+                for (byte sridByte : sridBytes) {
+                    srid = (srid << 8) + (sridByte & 0xff);
                 }
             } else {
                 for (int i = 0; i < sridBytes.length; i++) {
