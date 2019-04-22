@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Map, TileLayer, GeoJSON} from "react-leaflet";
+import {Map, TileLayer, GeoJSON, Popup} from "react-leaflet";
 import axios from "axios"
 import {Navbar, Dropdown, Button} from 'react-bootstrap';
 import "./WorldMap.css"
@@ -101,7 +101,19 @@ class WorldMap extends Component {
                     {this.state.shapes.map((shape, idx) =>
                         <GeoJSON color={this.stringToColor(shape.properties[this.state.currentDataType.rowToColor])}
                                  key = {"shape-"+idx}
-                            data={shape.geometry}/>
+                            data={shape.geometry}
+                                 onMouseOver={(e) => {
+                                     e.target.openPopup();
+                                 }}
+                                 onMouseOut={(e) => {
+                                     e.target.closePopup();
+                                 }}>
+                            <Popup>
+                                {this.state.currentDataType.dataProperties.map(property =>
+                                    <span> {property}: {shape.properties[property]} <br /> </span>
+                                )}
+                            </Popup>
+                        </GeoJSON>
                     )}
                 </Map>
             </div>
