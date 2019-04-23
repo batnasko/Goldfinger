@@ -75,9 +75,10 @@ class AdminPanel extends Component {
                         >
                         {props => (
                             <div>
-                                <ExportCSVButton {...props.csvProps}>Export CSV</ExportCSVButton>
+                                <ExportCSVButton className ="btn btn-success" style = {{marginBottom : 4}} {...props.csvProps}>Export CSV</ExportCSVButton>
 
                                 <FormControl
+                                    style = {{marginBottom : 4}}
                                     type='text'
                                     name='search'
                                     placeholder='Search'

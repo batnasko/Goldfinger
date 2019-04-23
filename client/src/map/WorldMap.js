@@ -151,7 +151,7 @@ class WorldMap extends Component {
                     </Dropdown>
                     <Button style={marginNavItems} variant="danger" onClick={e => this.getAllShapes()}>Show All</Button>
                 </Navbar>
-                <Alert show={this.state.alertShowAllShapes.show} variant="danger">
+                <Alert style={{marginBottom: 1}} show={this.state.alertShowAllShapes.show} variant="danger">
                     <p>Please, select data type, so we can show you some data!</p>
                     <div>
                         <Button onClick={e => {
