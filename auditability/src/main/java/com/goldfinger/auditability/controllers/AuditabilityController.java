@@ -17,6 +17,7 @@ import java.util.Map;
 @RequestMapping("/auditability")
 public class AuditabilityController {
     private static final String LOG_ADDED = "Log added";
+    private static final String INVALID_SEARCH = "Invalid search";
     private AuditabilityService auditabilityService;
 
     @Autowired
@@ -25,7 +26,7 @@ public class AuditabilityController {
     }
 
     @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED, reason =LOG_ADDED)
+    @ResponseStatus(value = HttpStatus.CREATED, reason = LOG_ADDED)
     public void addNewLog(@RequestBody HashMap<String, String> log) {
         try {
             auditabilityService.addLog(log);
@@ -35,21 +36,23 @@ public class AuditabilityController {
     }
 
     @PostMapping("/get")
-    public List<Map<String,String>> getLogs(@RequestBody SearchFilter searchFilter){
+    public List<Map<String, String>> getLogs(@RequestBody SearchFilter searchFilter) {
         try {
             return auditabilityService.getLogs(searchFilter);
-        }
-        catch (ResourceAccessException e){
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, INVALID_SEARCH);
+        } catch (ResourceAccessException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
     @PostMapping("/csv")
-    public String exportLogsToCvs(@RequestBody Export export){
+    public String exportLogsToCvs(@RequestBody Export export) {
         try {
             return auditabilityService.exportLogsToCSV(export);
-        }
-        catch (IllegalArgumentException e){
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, INVALID_SEARCH);
+        } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }

@@ -86,6 +86,7 @@ public class AuditabilityServiceImpl implements AuditabilityService {
                     logIds.addAll(logsOccurrence.get(i));
                 }
             }
+
         }
 
         List<Map<String, String>> logs = new ArrayList<>();
