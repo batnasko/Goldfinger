@@ -39,7 +39,7 @@ public class AuditabilityController {
     public List<Map<String, String>> getLogs(@RequestBody SearchFilter searchFilter) {
         try {
             return auditabilityService.getLogs(searchFilter);
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException | StringIndexOutOfBoundsException e ) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, INVALID_SEARCH);
         } catch (ResourceAccessException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -50,7 +50,7 @@ public class AuditabilityController {
     public String exportLogsToCvs(@RequestBody Export export) {
         try {
             return auditabilityService.exportLogsToCSV(export);
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException | StringIndexOutOfBoundsException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, INVALID_SEARCH);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
