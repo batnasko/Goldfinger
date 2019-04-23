@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Map, TileLayer, GeoJSON, Popup} from "react-leaflet";
+import {Map, TileLayer, GeoJSON, Tooltip} from "react-leaflet";
 import axios from "axios"
 import {Navbar, Dropdown, Button} from 'react-bootstrap';
 import "./WorldMap.css"
@@ -52,20 +52,20 @@ class WorldMap extends Component {
         })
     }
 
-    getShape(e){
-        axios.post("http://localhost:9000/map/shape/"+this.state.currentDataType.id, {
-            latitude : e.latlng.lng,
-            longitude : e.latlng.lat
-        }).then(response =>{
+    getShape(e) {
+        axios.post("http://localhost:9000/map/shape/" + this.state.currentDataType.id, {
+            latitude: e.latlng.lng,
+            longitude: e.latlng.lat
+        }).then(response => {
             this.setState({
-                shapes : [...this.state.shapes, response.data]
+                shapes: [...this.state.shapes, response.data]
             })
         })
     }
 
     stringToColor(str) {
-        for (var i = 0, hash = 0; i < str.length; hash = str.charCodeAt(i++) + ((hash << 5) - hash));
-         let color = Math.floor(Math.abs((Math.sin(hash) * 10000) % 1 * 16777216)).toString(16);
+        for (var i = 0, hash = 0; i < str.length; hash = str.charCodeAt(i++) + ((hash << 5) - hash)) ;
+        let color = Math.floor(Math.abs((Math.sin(hash) * 10000) % 1 * 16777216)).toString(16);
         return '#' + Array(6 - color.length + 1).join('0') + color;
     }
 
@@ -100,19 +100,19 @@ class WorldMap extends Component {
                     />
                     {this.state.shapes.map((shape, idx) =>
                         <GeoJSON color={this.stringToColor(shape.properties[this.state.currentDataType.rowToColor])}
-                                 key = {"shape-"+idx}
-                            data={shape.geometry}
+                                 key={"shape-" + idx}
+                                 data={shape.geometry}
                                  onMouseOver={(e) => {
                                      e.target.openPopup();
                                  }}
                                  onMouseOut={(e) => {
                                      e.target.closePopup();
                                  }}>
-                            <Popup key = {"popup-"+idx}>
+                            <Tooltip key={"tooltip-" + idx}>
                                 {this.state.currentDataType.dataProperties.map(property =>
-                                    <span> {property}: {shape.properties[property]} <br /> </span>
+                                    <span> {property}: {shape.properties[property]} <br/> </span>
                                 )}
-                            </Popup>
+                            </Tooltip>
                         </GeoJSON>
                     )}
                 </Map>
