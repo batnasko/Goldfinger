@@ -51,7 +51,7 @@ public class AuditabilityServiceImpl implements AuditabilityService {
             logIds = auditabilityRepository.getAllLogs(searchFilter.getFilter());
         } else {
             search = search.trim();
-            search = search.replaceAll("[^ .:=a-zA-Z0-9]", "");
+            search = search.replaceAll("[^ \".:=a-zA-Z0-9]", "");
             if (search.contains("=")) {
                 String[] searchSplit = search.split("=");
                 logIds = auditabilityRepository.searchExactTextInPairs(searchSplit[0].trim(), searchSplit[1].trim(), searchFilter.getFilter());
