@@ -16,7 +16,24 @@ class AdminPanel extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            logs: []
+            logs: [],
+            columnsToDisplay :[{
+                dataField: 'username',
+                text: 'Username',
+                sort: true
+            }, {
+                dataField: 'ip',
+                text: 'IP',
+                sort: true
+            }, {
+                dataField: 'date',
+                text: 'Time of the event',
+                sort: true
+            }, {
+                dataField: 'msg',
+                text: 'Message',
+                sort: true
+            }]
         }
     }
 
@@ -41,23 +58,6 @@ class AdminPanel extends Component {
     }
 
     render() {
-        const columns = [{
-            dataField: 'username',
-            text: 'Username',
-            sort: true
-        }, {
-            dataField: 'ip',
-            text: 'IP',
-            sort: true
-        }, {
-            dataField: 'date',
-            text: 'Time of the event',
-            sort: true
-        }, {
-            dataField: 'msg',
-            text: 'Message',
-            sort: true
-        }];
         return (
             <div className="admin-panel">
                 <Navbar expand="lg" variant="dark" bg="dark">
@@ -69,9 +69,9 @@ class AdminPanel extends Component {
 
                     <ToolkitProvider
                         bootstrap4
-                        keyField="id"
+                        keyField="toolkit"
                         data={this.state.logs}
-                        columns={columns}
+                        columns={this.state.columnsToDisplay}
                         >
                         {props => (
                             <div>
