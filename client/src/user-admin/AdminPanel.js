@@ -3,6 +3,7 @@ import {Button, Table, Navbar} from "react-bootstrap";
 import './AdminPanel.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import BootstrapTable from 'react-bootstrap-table-next';
+import axios from "axios";
 
 
 class AdminPanel extends Component {
@@ -13,31 +14,36 @@ class AdminPanel extends Component {
         }
     }
 
+    componentDidMount() {
+        this.getLogs();
+    }
+
+    getLogs() {
+        axios.post("http://localhost:8000/auditability/get", {}).then(success => {
+            this.setState({
+                logs: success.data
+            })
+        })
+    }
+
     render() {
-        const products = [{
-            username: "Rosen",
-            ip: "1533652",
-            timeOfEvent: "25.36",
-            message: "asdasdsadasd"
-        }, {
-            username: "Atanas",
-            ip: "1533652",
-            timeOfEvent: "25.36",
-            message: "asdasdsadasd"
-        }];
+        const products = this.state.logs;
         const columns = [{
             dataField: 'username',
             text: 'Username',
             sort: true
         }, {
             dataField: 'ip',
-            text: 'IP'
+            text: 'IP',
+            sort: true
         }, {
-            dataField: 'timeOfEvent',
-            text: 'Time of the event'
+            dataField: 'date',
+            text: 'Time of the event',
+            sort: true
         }, {
-            dataField: 'message',
-            text: 'Message'
+            dataField: 'msg',
+            text: 'Message',
+            sort: true
         }];
         return (
             <div className="admin-panel">
