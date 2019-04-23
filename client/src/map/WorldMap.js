@@ -69,6 +69,14 @@ class WorldMap extends Component {
         return '#' + Array(6 - color.length + 1).join('0') + color;
     }
 
+    getAllShapes(){
+        axios.get("http://localhost:9000/map/shape/" + this.state.currentDataType.id).then(response =>{
+            this.setState({
+                shapes: response.data
+            })
+        })
+    }
+
     render() {
         let marginNavItems = {
             marginLeft: 10,
@@ -90,6 +98,7 @@ class WorldMap extends Component {
                             )}
                         </Dropdown.Menu>
                     </Dropdown>
+                    <Button style={marginNavItems} variant="danger" onClick={e => this.getAllShapes()}>Show All</Button>
                 </Navbar>
                 <Map onClick={this.getShape.bind(this)} className="map"
                      center={[42.65, 23.37]}
