@@ -108,7 +108,7 @@ class WorldMap extends Component {
                                  onMouseOut={(e) => {
                                      e.target.closePopup();
                                  }}>
-                            <Popup>
+                            <Popup key = {"popup-"+idx}>
                                 {this.state.currentDataType.dataProperties.map(property =>
                                     <span> {property}: {shape.properties[property]} <br /> </span>
                                 )}
