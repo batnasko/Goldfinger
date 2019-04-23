@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Map, TileLayer, GeoJSON, Tooltip} from "react-leaflet";
+import {Map, TileLayer, GeoJSON, Tooltip, Popup} from "react-leaflet";
 import axios from "axios"
 import {Navbar, Dropdown, Button} from 'react-bootstrap';
 import "./WorldMap.css"
@@ -16,7 +16,13 @@ class WorldMap extends Component {
                 rowToColor: null,
                 dataProperties: []
             },
-            shapes: []
+            shapes: [],
+            noInfoPopup: {
+                latlng: {
+                    lat: 0,
+                    lng: 0
+                }
+            }
         };
     }
 
@@ -52,6 +58,7 @@ class WorldMap extends Component {
         })
     }
 
+
     getShape(e) {
         axios.post("http://localhost:9000/map/shape/" + this.state.currentDataType.id, {
             latitude: e.latlng.lng,
@@ -60,6 +67,21 @@ class WorldMap extends Component {
             this.setState({
                 shapes: [...this.state.shapes, response.data]
             })
+        }).catch((error) => {
+            this.setState({
+                noInfoPopup: {
+                    show: true,
+                    latlng: e.latlng
+                }
+            });
+            setTimeout(()=>{
+                this.setState({
+                    noInfoPopup: {
+                        show: false,
+                        latlng: e.latlng
+                    }
+                });
+            }, 600);
         })
     }
 
@@ -69,8 +91,8 @@ class WorldMap extends Component {
         return '#' + Array(6 - color.length + 1).join('0') + color;
     }
 
-    getAllShapes(){
-        axios.get("http://localhost:9000/map/shape/" + this.state.currentDataType.id).then(response =>{
+    getAllShapes() {
+        axios.get("http://localhost:9000/map/shape/" + this.state.currentDataType.id).then(response => {
             this.setState({
                 shapes: response.data
             })
@@ -103,6 +125,9 @@ class WorldMap extends Component {
                 <Map onClick={this.getShape.bind(this)} className="map"
                      center={[42.65, 23.37]}
                      zoom={6}>
+                    {this.state.noInfoPopup.show === true &&
+                        <Popup position={this.state.noInfoPopup.latlng}>There isn't any data for this point</Popup>
+                    }
                     <TileLayer
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'

@@ -20,7 +20,7 @@ class App extends Component {
         return (
             <div className="App">
                 <Navbar expand="lg" variant="light" bg="light">
-                    <Navbar.Brand onClick={e => this.setState({show : "map"})}>Goldfinger</Navbar.Brand>
+                    <Navbar.Brand className="goldfinger-brand" onClick={e => this.setState({show : "map"})}>Goldfinger</Navbar.Brand>
                     <Button variant="danger" onClick={e => this.setState({show : "adminPanel"})}>Admin Panel</Button>
                 </Navbar>
                 {this.showContent()}
