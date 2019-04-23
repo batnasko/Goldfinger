@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Map, TileLayer, GeoJSON, Tooltip, Popup} from "react-leaflet";
 import axios from "axios"
-import {Navbar, Dropdown, Button} from 'react-bootstrap';
+import {Navbar, Dropdown, Button, Alert} from 'react-bootstrap';
 import "./WorldMap.css"
 
 
@@ -20,8 +20,12 @@ class WorldMap extends Component {
             noInfoPopup: {
                 latlng: {
                     lat: 0,
-                    lng: 0
+                    lng: 0,
+                    msg: "There isn't any data for this point"
                 }
+            },
+            alertShowAllShapes: {
+                show: false,
             }
         };
     }
@@ -60,29 +64,46 @@ class WorldMap extends Component {
 
 
     getShape(e) {
-        axios.post("http://localhost:9000/map/shape/" + this.state.currentDataType.id, {
-            latitude: e.latlng.lng,
-            longitude: e.latlng.lat
-        }).then(response => {
-            this.setState({
-                shapes: [...this.state.shapes, response.data]
-            })
-        }).catch((error) => {
+        if (this.state.currentDataType.id === 0) {
             this.setState({
                 noInfoPopup: {
                     show: true,
-                    latlng: e.latlng
+                    latlng: e.latlng,
+                    msg: "Please select data type"
                 }
             });
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.setState({
                     noInfoPopup: {
-                        show: false,
-                        latlng: e.latlng
+                        show: false
                     }
                 });
             }, 600);
-        })
+        } else {
+            axios.post("http://localhost:9000/map/shape/" + this.state.currentDataType.id, {
+                latitude: e.latlng.lng,
+                longitude: e.latlng.lat
+            }).then(response => {
+                this.setState({
+                    shapes: [...this.state.shapes, response.data]
+                })
+            }).catch((error) => {
+                this.setState({
+                    noInfoPopup: {
+                        show: true,
+                        latlng: e.latlng,
+                        msg: "There isn't any data for this point"
+                    }
+                });
+                setTimeout(() => {
+                    this.setState({
+                        noInfoPopup: {
+                            show: false
+                        }
+                    });
+                }, 600);
+            })
+        }
     }
 
     stringToColor(str) {
@@ -92,11 +113,19 @@ class WorldMap extends Component {
     }
 
     getAllShapes() {
-        axios.get("http://localhost:9000/map/shape/" + this.state.currentDataType.id).then(response => {
+        if (this.state.currentDataType.id === 0) {
             this.setState({
-                shapes: response.data
+                alertShowAllShapes: {
+                    show: true
+                }
             })
-        })
+        } else {
+            axios.get("http://localhost:9000/map/shape/" + this.state.currentDataType.id).then(response => {
+                this.setState({
+                    shapes: response.data
+                })
+            })
+        }
     }
 
     render() {
@@ -122,11 +151,21 @@ class WorldMap extends Component {
                     </Dropdown>
                     <Button style={marginNavItems} variant="danger" onClick={e => this.getAllShapes()}>Show All</Button>
                 </Navbar>
+                <Alert show={this.state.alertShowAllShapes.show} variant="danger">
+                    <p>Please, select data type, so we can show you some data!</p>
+                    <div>
+                        <Button onClick={e => {
+                            this.setState({alertShowAllShapes: {show: false}})
+                        }} variant="outline-danger">
+                            Alright!
+                        </Button>
+                    </div>
+                </Alert>
                 <Map onClick={this.getShape.bind(this)} className="map"
                      center={[42.65, 23.37]}
                      zoom={6}>
-                    {this.state.noInfoPopup.show === true &&
-                        <Popup position={this.state.noInfoPopup.latlng}>There isn't any data for this point</Popup>
+                    {this.state.noInfoPopup.show &&
+                    <Popup position={this.state.noInfoPopup.latlng}>{this.state.noInfoPopup.msg}</Popup>
                     }
                     <TileLayer
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
