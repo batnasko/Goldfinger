@@ -1,6 +1,5 @@
 package com.goldfinger.gis.repositories.contracts;
 
-import com.goldfinger.gis.models.DataProperties;
 import com.goldfinger.gis.models.DataType;
 import com.goldfinger.gis.models.Point;
 import com.goldfinger.gis.models.Shape;
@@ -14,4 +13,6 @@ public interface MapRepository {
     List<DataType> getAllDataTypes();
     DataType getDataType(int dataTypeId);
     List<String> getDataProperties(int dataTypeId);
+    long saveDataType(String dataType, String tableName, String rowToColor);
+    void saveNewColumnToDisplay(long dataTypeId, String column);
 }

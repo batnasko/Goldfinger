@@ -22,6 +22,7 @@ public class MapRepositoryImpl implements MapRepository {
     private static final String SHAPE_NOT_FOUND = "Shape not found";
     private static final String DATA_TYPE_NOT_FOUND = "Data type not found";
     private static final String FAILED_TO_PARSE_SHAPE = "Failed to parseShape shape binary to Geometry";
+    private static final String COULDNT_INSERT_DATATYPE = "Couldn't insert new datatype";
 
     private String dbUrl, username, password;
     private Parser parser;
@@ -93,13 +94,13 @@ public class MapRepositoryImpl implements MapRepository {
 
     @Override
     public DataType getDataType(int dataTypeId) {
-        String sql = "SELECT * FROM dataTypes WHERE id = "+dataTypeId+";";
+        String sql = "SELECT * FROM dataTypes WHERE id = " + dataTypeId + ";";
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(sql)
         ) {
-            if (resultSet.next()){
+            if (resultSet.next()) {
                 return parser.dataType(resultSet);
             }
             throw new ResourceAccessException(DATA_TYPE_NOT_FOUND);
@@ -126,5 +127,38 @@ public class MapRepositoryImpl implements MapRepository {
         }
     }
 
+    @Override
+    public long saveDataType(String dataType, String tableName, String rowToColor) {
+        String sql = "INSERT INTO datatypes (dataType,tableName,row_to_color) VALUES('" + dataType + "','" + tableName + "','" + rowToColor + "') ;";
+        try (
+                Connection connection = DriverManager.getConnection(dbUrl, username, password);
+                PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ResultSet resultSet = getGeneratedKeys(statement)
+        ) {
+            if (resultSet.next()) {
+                return resultSet.getLong(1);
+            }
+            throw new ResourceAccessException(COULDNT_INSERT_DATATYPE);
+        } catch (SQLException e) {
+            throw new ResourceAccessException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void saveNewColumnToDisplay(long dataTypeId, String column) {
+        String sql = "INSERT INTO dataproperties(dataType_id, property) VALUES ('" + dataTypeId + "','" + column + "');";
+        try (Connection connection = DriverManager.getConnection(dbUrl, username, password);
+             Statement statement = connection.createStatement();
+        ) {
+            statement.execute(sql);
+        } catch (SQLException e) {
+            throw new ResourceAccessException(e.getMessage());
+        }
+    }
+
+    private ResultSet getGeneratedKeys(PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.execute();
+        return preparedStatement.getGeneratedKeys();
+    }
 
 }
