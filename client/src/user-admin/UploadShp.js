@@ -21,9 +21,13 @@ class UploadShp extends Component {
             var reader = new FileReader();
             reader.readAsDataURL(form.shapeFile.files[0]);
             reader.onload = function () {
-                axios.post("http://localhost:8080",{
-                    file : reader.result
-                });
+                let data = {
+                    "file" : reader.result,
+                    "shpFileName" : form.shapeType.value,
+                    "columnsToShow" : form.columnsToDisplay.value,
+                    "columnToColor" : form.columnToColor.value
+                };
+                axios.post("http://localhost:9000/map/upload",data);
             };
         }
     }
