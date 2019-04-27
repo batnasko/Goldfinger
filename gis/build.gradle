@@ -21,4 +21,6 @@ dependencies {
 
     compile group: 'com.vividsolutions', name: 'jts', version: '1.13'
     compile group: 'com.bedatadriven', name: 'jackson-datatype-jts', version: '2.4'
+
+    compile group: 'net.lingala.zip4j', name: 'zip4j', version: '1.3.2'
 }
