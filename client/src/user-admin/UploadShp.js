@@ -1,44 +1,54 @@
 import React, {Component} from 'react';
 import {Button, Form, Col, InputGroup} from "react-bootstrap";
 import axios from "axios";
+import Spinner from "../common/spinner.js"
 
 
 class UploadShp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            validated: false
+            validated: false,
+            isFileUploading: false
         }
     }
 
-    handleSubmit(event) {
+    uploadShp(event) {
         event.preventDefault();
-        const form = event.currentTarget;
-
         this.setState({validated: true});
 
+        const form = event.currentTarget;
+        let returnToMap = this.props.showMap;
         if (form.checkValidity() === true) {
+            this.setState({
+                isFileUploading : true
+            })
             var reader = new FileReader();
             reader.readAsDataURL(form.shapeFile.files[0]);
             reader.onload = function () {
                 let data = {
-                    "file" : reader.result,
-                    "shpFileName" : form.shapeType.value,
-                    "columnsToShow" : form.columnsToDisplay.value,
-                    "columnToColor" : form.columnToColor.value
+                    "file": reader.result,
+                    "shpFileName": form.shapeType.value,
+                    "columnsToShow": form.columnsToDisplay.value,
+                    "columnToColor": form.columnToColor.value
                 };
-                axios.post("http://localhost:9000/map/upload",data);
+                axios.post("http://localhost:9000/map/upload", data, {
+                    onUploadProgress: progressEvent => {
+                        console.log("Upload: " + Math.round(progressEvent.loaded / progressEvent.total) * 100)
+                    }
+                }).then(response =>
+                    returnToMap()
+                );
             };
         }
     }
 
-    render() {
-        const {validated} = this.state;
-        return (
-            <Form
+    showContent(){
+        if (!this.state.isFileUploading) {
+            return <Form
                 noValidate
-                validated={validated}
-                onSubmit={e => this.handleSubmit(e)}
+                validated={this.state.validated}
+                onSubmit={e => this.uploadShp(e)}
             >
                 <Form.Row>
                     <Form.Group as={Col} md="4" controlId="shapeFile">
@@ -49,7 +59,8 @@ class UploadShp extends Component {
                             style={{display: "none"}}
                             ref={fileInput => this.fileInput = fileInput}
                         />
-                        <Button style={{display: "block"}} variant="success" onClick={() => this.fileInput.click()}>Select file</Button>
+                        <Button style={{display: "block"}} variant="success" onClick={() => this.fileInput.click()}>Select
+                            file</Button>
                         <Form.Control.Feedback type="invalid">Upload shape file</Form.Control.Feedback>
                     </Form.Group>
                 </Form.Row>
@@ -80,8 +91,19 @@ class UploadShp extends Component {
                         </Form.Control.Feedback>
                     </Form.Group>
                 </Form.Row>
-                <Button type="submit" variant = "danger">Submit form</Button>
+                <Button type="submit" variant="danger">Submit form</Button>
             </Form>
+        }
+        else {
+            return <Spinner/>
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                {this.showContent()}
+            </div>
         );
     }
 }

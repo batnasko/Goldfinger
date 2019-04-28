@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Button, Navbar} from "react-bootstrap";
+
 import './AdminPanel.css';
 
 import Auditability from "./Auditability";
@@ -19,7 +20,7 @@ class AdminPanel extends Component {
 
     showContent(){
         if (this.state.show === "auditability") return <Auditability/>
-        else if(this.state.show === "uploadShp") return <UploadShp/>
+        else if(this.state.show === "uploadShp") return <UploadShp showMap={this.props.showMap}/>
     }
 
     render() {
