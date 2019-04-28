@@ -24,12 +24,16 @@ class AdminPanel extends Component {
     }
 
     render() {
+        let marginNavItems = {
+            marginLeft: 10,
+            marginRight: 10
+        };
         return (
             <div className="admin-panel">
                 <Navbar expand="lg" variant="dark" bg="dark">
                     <Navbar.Brand>Admin Panel</Navbar.Brand>
-                    <Button variant="danger" onClick = {()=> this.setState({show : "auditability"})}>Auditability</Button>
-                    <Button variant="danger" onClick = {()=> this.setState({show : "uploadShp"})}>Upload</Button>
+                    <Button style={marginNavItems} variant="danger" onClick = {()=> this.setState({show : "auditability"})}>Auditability</Button>
+                    <Button style={marginNavItems} variant="danger" onClick = {()=> this.setState({show : "uploadShp"})}>Upload</Button>
                 </Navbar>
                 <div className="content-container">
                     {this.showContent()}
