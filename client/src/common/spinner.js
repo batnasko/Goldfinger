@@ -4,7 +4,7 @@ import spinnerStyle from "./spinner.css";
 
 
 const Spinner = props =>
-    <div className={spinnerStyle.spinnerContainer}>
+    <div className="spinnerContainer">
         <img src={spinner}/>
     </div>;
 

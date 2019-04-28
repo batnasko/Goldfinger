@@ -31,7 +31,7 @@ class AdminPanel extends Component {
                     <Button variant="danger" onClick = {()=> this.setState({show : "auditability"})}>Auditability</Button>
                     <Button variant="danger" onClick = {()=> this.setState({show : "uploadShp"})}>Upload</Button>
                 </Navbar>
-                <div className="table-container">
+                <div className="content-container">
                     {this.showContent()}
                 </div>
             </div>
