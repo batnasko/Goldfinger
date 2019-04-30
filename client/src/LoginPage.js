@@ -1,19 +1,19 @@
 import React, {Component} from 'react';
 import './LoginPage.css';
-import MainPage from "./MainPage";
+import {Button, Col, Form} from "react-bootstrap";
 
 class LoginPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-
-        }
+        this.state = {}
     }
 
     render() {
         return (
             <div className="background">
+                <div className="form">
 
+                </div>
             </div>
         );
     }

@@ -5,3 +5,12 @@
     background-size: cover;
     opacity: 0.91;
 }
+
+.form{
+    background: white;
+    display: inline-block;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: perspective(1px) translateY(-50%) translateX(-50%);
+}
