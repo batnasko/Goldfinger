@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import MainPage from "./MainPage";
+import LoginPage from "./LoginPage";
 
 class App extends Component {
     constructor(props) {
@@ -13,6 +14,7 @@ class App extends Component {
 
     showContent() {
         if (this.state.show === "mainPage") return <MainPage/>;
+        if (this.state.show === "loginPage") return <LoginPage/>;
     }
 
     render() {
