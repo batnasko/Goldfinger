@@ -18,14 +18,9 @@ class App extends Component {
         })
     }
 
-    showContent() {
-        if (this.state.show === "map") return <WorldMap/>
-        if (this.state.show === "adminPanel") return <AdminPanel showMap={this.showMap}/>
-    }
-
-    render() {
+    showLoggedIn() {
         return (
-            <div className="App">
+            <div>
                 <Navbar expand="lg" variant="light" bg="light">
                     <Navbar.Brand className="goldfinger-brand" onClick={e => this.setState({show: "map"})}>
                         <img src={require("./images/logo.png")}
@@ -37,6 +32,19 @@ class App extends Component {
                     <Button variant="danger" onClick={e => this.setState({show: "adminPanel"})}>Admin Panel</Button>
                 </Navbar>
                 {this.showContent()}
+            </div>
+        )
+    }
+
+    showContent() {
+        if (this.state.show === "map") return <WorldMap/>
+        if (this.state.show === "adminPanel") return <AdminPanel showMap={this.showMap}/>
+    }
+
+    render() {
+        return (
+            <div className="App">
+                {this.showLoggedIn()}
             </div>
         );
     }
