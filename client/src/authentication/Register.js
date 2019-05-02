@@ -11,7 +11,7 @@ class Register extends Component {
         return (
             <Form>
                 <Row>
-                    <Form.Group as={Col} md="6"controlId="firstName">
+                    <Form.Group as={Col} md="6" controlId="firstName">
                         <Form.Label>First name</Form.Label>
                         <Form.Control type="input" placeholder="First name" required/>
                     </Form.Group>
@@ -32,9 +32,16 @@ class Register extends Component {
                     <Form.Label>Repeat password</Form.Label>
                     <Form.Control type="password" placeholder="Repeat password" required/>
                 </Form.Group>
-                <Button variant="danger" type="submit">
-                    Register
-                </Button>
+                <Row style={{paddingLeft:15, paddingRight:15}}>
+                    <Button variant="danger"
+                            onClick={this.props.showLogin}> {/*type="submit" to submit form ?? when implement security */}
+                        Register
+                    </Button>
+                    <Form.Text style={{cursor: "pointer", marginLeft:"auto", marginTop:8}} className="text-muted"
+                               onClick={this.props.showLogin}>
+                        Back
+                    </Form.Text>
+                </Row>
             </Form>
         );
     }
