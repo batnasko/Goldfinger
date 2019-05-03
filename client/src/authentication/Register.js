@@ -1,15 +1,46 @@
 import React, {Component} from 'react';
-import {Button, Form, Row, Col} from "react-bootstrap";
+import {Button, Form, Row, Col, Alert} from "react-bootstrap";
+import axios from "axios";
 
 class Register extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            showAlert: false
+        }
+    }
+
+    register(e) {
+        e.preventDefault();
+        let data = {
+            "username": e.currentTarget.email.value,
+            "password": e.currentTarget.password.value,
+            "firstName": e.currentTarget.firstName.value,
+            "lastName": e.currentTarget.lastName.value
+        }
+        axios.post("http://localhost:8080", data).then(response => {
+            this.props.showLogin();
+        }, error => {
+            this.setState({
+                showAlert: true
+            });
+            setTimeout(() => {
+                this.setState({
+                    showAlert: false
+                });
+            }, 2000);
+        })
     }
 
     render() {
         return (
-            <Form>
+            <Form
+                onSubmit={e => this.register(e)}>
+                {this.state.showAlert &&
+                    <Alert variant="danger">
+                        Email is already taken!
+                    </Alert>
+                }
                 <Row>
                     <Form.Group as={Col} md="6" controlId="firstName">
                         <Form.Label>First name</Form.Label>
@@ -22,7 +53,7 @@ class Register extends Component {
                 </Row>
                 <Form.Group controlId="email">
                     <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="Enter email" required/>
+                    <Form.Control placeholder="Enter email" required/>
                 </Form.Group>
                 <Form.Group controlId="password">
                     <Form.Label>Password</Form.Label>
@@ -32,12 +63,12 @@ class Register extends Component {
                     <Form.Label>Repeat password</Form.Label>
                     <Form.Control type="password" placeholder="Repeat password" required/>
                 </Form.Group>
-                <Row style={{paddingLeft:15, paddingRight:15}}>
+                <Row style={{paddingLeft: 15, paddingRight: 15}}>
                     <Button variant="danger"
-                            onClick={this.props.showLogin}> {/*type="submit" to submit form ?? when implement security */}
+                            type="submit">
                         Register
                     </Button>
-                    <Form.Text style={{cursor: "pointer", marginLeft:"auto", marginTop:8}} className="text-muted"
+                    <Form.Text style={{cursor: "pointer", marginLeft: "auto", marginTop: 8}} className="text-muted"
                                onClick={this.props.showLogin}>
                         Back
                     </Form.Text>

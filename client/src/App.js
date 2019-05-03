@@ -7,7 +7,8 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            show: "loginPage"
+            show: "loginPage",
+            token : null
         }
     }
 
@@ -23,9 +24,15 @@ class App extends Component {
         })
     };
 
+    setToken = (jwt) =>{
+        this.setState({
+            token:jwt
+        })
+    };
+
     showContent() {
         if (this.state.show === "mainPage") return <MainPage showLoginPage={this.showLoginPage}/>;
-        if (this.state.show === "loginPage") return <LoginPage showMainPage ={this.showMainPage}/>;
+        if (this.state.show === "loginPage") return <LoginPage showMainPage ={this.showMainPage} setToken={this.setToken}/>;
     }
 
     render() {
