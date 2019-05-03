@@ -34,7 +34,13 @@ class MainPage extends Component {
                              className="d-inline-block align-top"
                         />
                     </Navbar.Brand>
-                    <Button variant="danger" onClick={e => this.setState({show: "adminPanel"})}>Admin Panel</Button>
+                    <div style={{marginLeft:"auto"}}>
+                        <Button variant="danger" style={{marginLeft:10, marginRight:10}}
+                                onClick={e => this.setState({show: "adminPanel"})}>Admin Panel</Button>
+
+                        <Button variant="danger" style={{marginLeft:10, marginRight:10}}
+                                onClick={this.props.showLoginPage}>Logout</Button> {/*after implementing security remove cookie*/}
+                    </div>
                 </Navbar>
                 {this.showContent()}
             </div>
