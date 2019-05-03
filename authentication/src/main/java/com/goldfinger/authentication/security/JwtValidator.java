@@ -1,10 +1,14 @@
 package com.goldfinger.authentication.security;
 
 import com.goldfinger.authentication.models.JwtUserDetails;
+import com.goldfinger.authentication.models.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Component
 public class JwtValidator {
@@ -25,11 +29,20 @@ public class JwtValidator {
             jwtUserDetails.setId(Long.parseLong((String) body.get("id")));
             jwtUserDetails.setFirstName(String.valueOf(body.get("firstName")));
             jwtUserDetails.setLastName(String.valueOf(body.get("lastName")));
-            jwtUserDetails.setAuthorities(AuthorityUtils.commaSeparatedStringToAuthorityList(String.valueOf(body.get("roles"))));
+            jwtUserDetails.setAuthorities(parseRoles(String.valueOf(body.get("roles"))));
         }catch (Exception e){
             System.out.println(e);
         }
 
         return jwtUserDetails;
+    }
+
+    private Collection<Role> parseRoles(String commaSeparatedStringRoles){
+        Collection<Role> roles = new ArrayList<>();
+        for (String role: commaSeparatedStringRoles.split(",")) {
+            roles.add(new Role(role));
+        }
+
+        return roles;
     }
 }
