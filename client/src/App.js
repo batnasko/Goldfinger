@@ -11,10 +11,21 @@ class App extends Component {
         }
     }
 
+    showMainPage= () =>{
+        this.setState({
+            show: "mainPage"
+        })
+    };
+
+    showLoginPage= () =>{
+        this.setState({
+            show: "loginPage"
+        })
+    };
 
     showContent() {
-        if (this.state.show === "mainPage") return <MainPage/>;
-        if (this.state.show === "loginPage") return <LoginPage/>;
+        if (this.state.show === "mainPage") return <MainPage showLoginPage={this.showLoginPage}/>;
+        if (this.state.show === "loginPage") return <LoginPage showMainPage ={this.showMainPage}/>;
     }
 
     render() {

@@ -1,18 +1,42 @@
 import React, {Component} from 'react';
 import './LoginPage.css';
-import {Button, Col, Form} from "react-bootstrap";
+import Login from "./authentication/Login.js"
+import Register from "./authentication/Register";
 
 class LoginPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            show: "login"
+        }
     }
+
+    showContent() {
+        if (this.state.show === "login") return <Login showRegister={this.showRegister} showMainPage={this.props.showMainPage}/>;
+        if (this.state.show === "register") return <Register showLogin={this.showLogin}/>;
+    }
+
+    showRegister = () => {
+        this.setState({
+            show: "register"
+        })
+    };
+
+    showLogin = () => {
+        this.setState({
+            show: "login"
+        })
+    };
+
 
     render() {
         return (
-            <div className="background">
-                <div className="form">
+            <div>
+                <div className="background">
 
+                </div>
+                <div className="form">
+                    {this.showContent()}
                 </div>
             </div>
         );
