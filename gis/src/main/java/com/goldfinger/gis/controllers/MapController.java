@@ -5,6 +5,7 @@ import com.goldfinger.gis.models.*;
 import com.goldfinger.gis.services.contracts.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.server.ResponseStatusException;
@@ -64,6 +65,7 @@ public class MapController {
     }
 
     @PostMapping("/upload")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(value = HttpStatus.CREATED, reason = FILE_UPLOADED)
     public boolean uploadFile(@RequestBody ShpFile shpFile) {
         try {
