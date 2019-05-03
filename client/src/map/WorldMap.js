@@ -26,14 +26,19 @@ class WorldMap extends Component {
             },
             alertShowAllShapes: {
                 show: false,
+            },
+            httpHeaders: {
+                headers: {
+                    Authorization: "Bearer " + this.props.token
+                }
             }
         };
     }
 
     componentDidMount() {
-        axios.get("http://localhost:9000/map/datatype").then(response => {
+        axios.get("http://localhost:9000/map/datatype", this.state.httpHeaders).then(response => {
             response.data.map((dataType) => {
-                axios.get("http://localhost:9000/map/datatype/" + dataType.id + "/property").then(response => {
+                axios.get("http://localhost:9000/map/datatype/" + dataType.id + "/property", this.state.httpHeaders).then(response => {
                     dataType["properties"] = response.data;
 
                     this.setState(prevState => ({
@@ -80,14 +85,16 @@ class WorldMap extends Component {
                 });
             }, 600);
         } else {
-            axios.post("http://localhost:9000/map/shape/" + this.state.currentDataType.id, {
+            let data = {
                 latitude: e.latlng.lng,
                 longitude: e.latlng.lat
-            }).then(response => {
+            };
+            axios.post("http://localhost:9000/map/shape/" + this.state.currentDataType.id, data, this.props.httpHeaders).then(response => {
                 this.setState({
                     shapes: [...this.state.shapes, response.data]
                 })
             }).catch((error) => {
+                console.log(error);
                 this.setState({
                     noInfoPopup: {
                         show: true,
@@ -120,7 +127,7 @@ class WorldMap extends Component {
                 }
             })
         } else {
-            axios.get("http://localhost:9000/map/shape/" + this.state.currentDataType.id).then(response => {
+            axios.get("http://localhost:9000/map/shape/" + this.state.currentDataType.id, this.state.httpHeaders).then(response => {
                 this.setState({
                     shapes: response.data
                 })

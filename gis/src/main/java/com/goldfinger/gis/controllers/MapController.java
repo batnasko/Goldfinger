@@ -16,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/map")
+@CrossOrigin(origins = "http://localhost:3000")
 public class MapController {
     private static final String FILE_UPLOADED = "File uploaded";
     private static final String FILE_NOT_UPLOADED = "Problem with uploading file";
@@ -25,6 +26,7 @@ public class MapController {
     public MapController(MapService mapService) {
         this.mapService = mapService;
     }
+
 
     @GetMapping("/datatype")
     public List<DataType> getAllDataTypes() {
@@ -65,7 +67,6 @@ public class MapController {
     }
 
     @PostMapping("/upload")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(value = HttpStatus.CREATED, reason = FILE_UPLOADED)
     public boolean uploadFile(@RequestBody ShpFile shpFile) {
         try {

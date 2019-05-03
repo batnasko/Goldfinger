@@ -19,8 +19,12 @@ class MainPage extends Component {
     };
 
     showContent() {
-        if (this.state.show === "map") return <WorldMap/>;
-        if (this.state.show === "adminPanel") return <AdminPanel showMap={this.showMap}/>;
+        if (this.state.show === "map") return <WorldMap token={this.props.token}/>;
+        if (this.state.show === "adminPanel") return <AdminPanel token={this.props.token} showMap={this.showMap}/>;
+    }
+
+    showAdminButton() {
+        if (this.props.user.roles.includes("ROLE_ADMIN")) return <Button variant="danger" style={{marginLeft: 10, marginRight: 10}} onClick={e => this.setState({show: "adminPanel"})}>Admin Panel</Button>;
     }
 
     render() {
@@ -34,11 +38,9 @@ class MainPage extends Component {
                              className="d-inline-block align-top"
                         />
                     </Navbar.Brand>
-                    <div style={{marginLeft:"auto"}}>
-                        <Button variant="danger" style={{marginLeft:10, marginRight:10}}
-                                onClick={e => this.setState({show: "adminPanel"})}>Admin Panel</Button>
-
-                        <Button variant="danger" style={{marginLeft:10, marginRight:10}}
+                    <div style={{marginLeft: "auto"}}>
+                        {this.showAdminButton()}
+                        <Button variant="danger" style={{marginLeft: 10, marginRight: 10}}
                                 onClick={this.props.showLoginPage}>Logout</Button> {/*after implementing security remove cookie*/}
                     </div>
                 </Navbar>

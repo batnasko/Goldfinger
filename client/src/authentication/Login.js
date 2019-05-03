@@ -12,16 +12,13 @@ class Login extends Component {
 
     login(e) {
         e.preventDefault();
-        let setToken = this.props.setToken;
-        let showMainPage = this.props.showMainPage;
         let data = {
             "username": e.currentTarget.email.value,
             "password": e.currentTarget.password.value
         };
         axios.post("http://localhost:8080/token", data).then(response => {
-            console.log(response);
-            setToken(response.data);
-            showMainPage();
+            this.props.setToken(response.data);
+            this.props.showMainPage();
         }, error => {
             this.setState({
                 showAlert: true

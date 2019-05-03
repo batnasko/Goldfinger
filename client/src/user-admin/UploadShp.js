@@ -21,8 +21,9 @@ class UploadShp extends Component {
         let returnToMap = this.props.showMap;
         if (form.checkValidity() === true) {
             this.setState({
-                isFileUploading : true
-            })
+                isFileUploading: true
+            });
+            let token = this.props.token;
             var reader = new FileReader();
             reader.readAsDataURL(form.shapeFile.files[0]);
             reader.onload = function () {
@@ -33,8 +34,8 @@ class UploadShp extends Component {
                     "columnToColor": form.columnToColor.value
                 };
                 axios.post("http://localhost:9000/map/upload", data, {
-                    onUploadProgress: progressEvent => {
-                        console.log("Upload: " + Math.round(progressEvent.loaded / progressEvent.total) * 100)
+                    headers: {
+                        Authorization: "Bearer " + token
                     }
                 }).then(response =>
                     returnToMap()
@@ -43,7 +44,7 @@ class UploadShp extends Component {
         }
     }
 
-    showContent(){
+    showContent() {
         if (!this.state.isFileUploading) {
             return <Form
                 noValidate
@@ -93,8 +94,7 @@ class UploadShp extends Component {
                 </Form.Row>
                 <Button type="submit" variant="danger">Submit form</Button>
             </Form>
-        }
-        else {
+        } else {
             return <Spinner/>
         }
     }
