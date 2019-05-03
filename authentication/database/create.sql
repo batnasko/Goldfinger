@@ -6,7 +6,7 @@ USE  goldfingerauthentication;
 CREATE TABLE users
 (
     id INT NOT NULL AUTO_INCREMENT,
-    username varchar(80) NOT NULL,
+    username varchar(80) unique NOT NULL,
 	firstName varchar(80) NOT NULL,
     lastName varchar(80) NOT NULL,
     password varchar(80) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE users
 CREATE TABLE roles
 (
     id INT NOT NULL AUTO_INCREMENT,
-    role varchar(80) NOT NULL,
+    role varchar(80) unique NOT NULL,
     PRIMARY KEY(id)
 );
 
