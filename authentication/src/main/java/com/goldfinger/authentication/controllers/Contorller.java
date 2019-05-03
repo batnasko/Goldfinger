@@ -45,4 +45,6 @@ public class Contorller {
     public List<JwtUserDetails> getAllUsers(){
         return repository.findAll();
     }
+
+
 }
