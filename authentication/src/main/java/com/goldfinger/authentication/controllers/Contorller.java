@@ -36,7 +36,7 @@ public class Contorller {
     }
 
     @GetMapping("/user")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public String hello(){
         return "Hello";
     }

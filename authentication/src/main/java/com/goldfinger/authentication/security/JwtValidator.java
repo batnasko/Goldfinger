@@ -25,8 +25,8 @@ public class JwtValidator {
                     .getBody();
 
             jwtUserDetails = new JwtUserDetails();
-            jwtUserDetails.setUsername(body.getSubject());
-            jwtUserDetails.setId(Long.parseLong((String) body.get("id")));
+            jwtUserDetails.setId(Long.parseLong(body.getSubject()));
+            jwtUserDetails.setUsername(String.valueOf(body.get("username")));
             jwtUserDetails.setFirstName(String.valueOf(body.get("firstName")));
             jwtUserDetails.setLastName(String.valueOf(body.get("lastName")));
             jwtUserDetails.setAuthorities(parseRoles(String.valueOf(body.get("roles"))));

@@ -17,8 +17,8 @@ public class JwtGenerator {
 
     public String generate(JwtUserDetails jwtUserDetails) {
 
-        Claims claims = Jwts.claims().setSubject(jwtUserDetails.getUsername());
-        claims.put("id", String.valueOf(jwtUserDetails.getId()));
+        Claims claims = Jwts.claims().setSubject(String.valueOf(jwtUserDetails.getId()));
+        claims.put("username", String.valueOf(jwtUserDetails.getUsername()));
         claims.put("roles", parsRoles(jwtUserDetails.getAuthorities()));
         claims.put("firstName", jwtUserDetails.getFirstName());
         claims.put("lastName", jwtUserDetails.getLastName());

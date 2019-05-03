@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<JwtUserDetails, Integer> {
     List<JwtUserDetails> findByUsername(String username);
+    List<JwtUserDetails> findByUsernameAndPassword(String username, String password);
 }

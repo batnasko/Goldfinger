@@ -9,6 +9,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping
@@ -33,4 +35,12 @@ public class UserController {
         }
     }
 
+    @PostMapping("/token")
+    public String getToken(@RequestBody Map<String, String> usernamePassword){
+        try {
+            return service.getToken(usernamePassword.get("username"), usernamePassword.get("password"));
+        }catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 }
