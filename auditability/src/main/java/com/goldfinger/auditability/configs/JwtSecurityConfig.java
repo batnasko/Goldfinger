@@ -69,7 +69,7 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
         config.addAllowedHeader("Access-Control-Allow-Origin");
         config.addAllowedHeader("Authorization");
         config.addAllowedHeader("Content-type");
-        config.addAllowedOrigin("http://localhost:8000");
+        config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedMethod("*");
 
         source.registerCorsConfiguration("/**", config);
