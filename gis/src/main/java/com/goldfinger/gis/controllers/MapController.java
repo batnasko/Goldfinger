@@ -66,6 +66,7 @@ public class MapController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/upload")
     @ResponseStatus(value = HttpStatus.CREATED, reason = FILE_UPLOADED)
     public boolean uploadFile(@RequestBody ShpFile shpFile) {

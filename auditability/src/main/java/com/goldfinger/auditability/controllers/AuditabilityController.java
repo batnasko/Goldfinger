@@ -5,6 +5,7 @@ import com.goldfinger.auditability.models.SearchFilter;
 import com.goldfinger.auditability.services.contracts.AuditabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,6 +36,7 @@ public class AuditabilityController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/get")
     public List<Map<String, String>> getLogs(@RequestBody SearchFilter searchFilter) {
         try {
@@ -46,6 +48,7 @@ public class AuditabilityController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/csv")
     public String exportLogsToCvs(@RequestBody Export export) {
         try {
