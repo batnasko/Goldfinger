@@ -22,8 +22,9 @@ class WorldMap extends Component {
                 latlng: {
                     lat: 0,
                     lng: 0,
-                    msg: "There isn't any data for this point"
-                }
+                },
+                msg: "There isn't any data for this point",
+                show: false
             },
             alertShowAllShapes: {
                 show: false,
@@ -51,6 +52,7 @@ class WorldMap extends Component {
     }
 
     changeDataType(dataType) {
+
         this.setState({
             currentDataType: {
                 id: dataType.id,
@@ -65,11 +67,21 @@ class WorldMap extends Component {
     clearMap() {
         this.setState({
             shapes: []
-        })
+        });
+        this.setState({
+            noInfoPopup:{
+                show:false
+            }
+        });
     }
 
 
     getShape(e) {
+        this.setState({
+            noInfoPopup:{
+                show:false
+            }
+        });
         if (this.state.currentDataType.id === 0) {
             this.setState({
                 noInfoPopup: {
@@ -78,23 +90,16 @@ class WorldMap extends Component {
                     msg: "Please select data type"
                 }
             });
-            setTimeout(() => {
-                this.setState({
-                    noInfoPopup: {
-                        show: false
-                    }
-                });
-            }, 600);
         } else {
             let data = {
                 latitude: e.latlng.lng,
                 longitude: e.latlng.lat
             };
-            axios.post("http://localhost:8000/auditability",{
+            axios.post("http://localhost:8000/auditability", {
                 "username": this.props.user.userDetails.username,
-                "ip" : this.props.user.ip,
+                "ip": this.props.user.ip,
                 "date": date(),
-                "msg": "Asked for "+this.state.currentDataType.dataType + " data for point lat:" + data.longitude + " lng:"+data.latitude,
+                "msg": "Asked for " + this.state.currentDataType.dataType + " data for point lat:" + data.longitude + " lng:" + data.latitude,
                 "dataType": this.state.currentDataType.dataType
             });
             axios.post("http://localhost:9000/map/shape/" + this.state.currentDataType.id, data, this.props.httpHeaders).then(response => {
@@ -110,13 +115,6 @@ class WorldMap extends Component {
                         msg: "There isn't any data for this point"
                     }
                 });
-                setTimeout(() => {
-                    this.setState({
-                        noInfoPopup: {
-                            show: false
-                        }
-                    });
-                }, 600);
             })
         }
     }
@@ -135,11 +133,11 @@ class WorldMap extends Component {
                 }
             })
         } else {
-            axios.post("http://localhost:8000/auditability",{
+            axios.post("http://localhost:8000/auditability", {
                 "username": this.props.user.userDetails.username,
-                "ip" : this.props.user.ip,
+                "ip": this.props.user.ip,
                 "date": date(),
-                "msg": "Asked for all data for "+this.state.currentDataType.dataType + " data type",
+                "msg": "Asked for all data for " + this.state.currentDataType.dataType + " data type",
                 "dataType": this.state.currentDataType.dataType
             });
             axios.get("http://localhost:9000/map/shape/" + this.state.currentDataType.id, this.state.httpHeaders).then(response => {
