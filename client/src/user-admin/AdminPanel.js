@@ -19,8 +19,8 @@ class AdminPanel extends Component {
     }
 
     showContent(){
-        if (this.state.show === "auditability") return <Auditability token ={this.props.token}/>
-        else if(this.state.show === "uploadShp") return <UploadShp token={this.props.token} showMap={this.props.showMap}/>
+        if (this.state.show === "auditability") return <Auditability user ={this.props.user}/>
+        else if(this.state.show === "uploadShp") return <UploadShp user={this.props.user} showMap={this.props.showMap}/>
     }
 
     render() {

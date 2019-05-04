@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {Button, Form, Col, InputGroup} from "react-bootstrap";
 import axios from "axios";
-import Spinner from "../common/spinner.js"
+import Spinner from "../common/spinner.js";
+
 
 
 class UploadShp extends Component {
@@ -23,7 +24,7 @@ class UploadShp extends Component {
             this.setState({
                 isFileUploading: true
             });
-            let token = this.props.token;
+            let token = this.props.user.token;
             var reader = new FileReader();
             reader.readAsDataURL(form.shapeFile.files[0]);
             reader.onload = function () {

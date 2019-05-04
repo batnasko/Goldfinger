@@ -19,12 +19,13 @@ class MainPage extends Component {
     };
 
     showContent() {
-        if (this.state.show === "map") return <WorldMap token={this.props.token}/>;
-        if (this.state.show === "adminPanel") return <AdminPanel token={this.props.token} showMap={this.showMap}/>;
+        console.log(this.props.user);
+        if (this.state.show === "map") return <WorldMap user={this.props.user}/>;
+        if (this.state.show === "adminPanel") return <AdminPanel user={this.props.user} showMap={this.showMap}/>;
     }
 
     showAdminButton() {
-        if (this.props.user.roles.includes("ROLE_ADMIN")) return <Button variant="danger" style={{marginLeft: 10, marginRight: 10}} onClick={e => this.setState({show: "adminPanel"})}>Admin Panel</Button>;
+        if (this.props.user.userDetails.roles.includes("ROLE_ADMIN")) return <Button variant="danger" style={{marginLeft: 10, marginRight: 10}} onClick={e => this.setState({show: "adminPanel"})}>Admin Panel</Button>;
     }
 
     render() {

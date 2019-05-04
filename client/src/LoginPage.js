@@ -12,8 +12,8 @@ class LoginPage extends Component {
     }
 
     showContent() {
-        if (this.state.show === "login") return <Login showRegister={this.showRegister} setToken={this.props.setToken} showMainPage={this.props.showMainPage}/>;
-        if (this.state.show === "register") return <Register showLogin={this.showLogin}/>;
+        if (this.state.show === "login") return <Login showRegister={this.showRegister} user={this.props.user} setToken={this.props.setToken} showMainPage={this.props.showMainPage}/>;
+        if (this.state.show === "register") return <Register showLogin={this.showLogin} user={this.props.user}/>;
     }
 
     showRegister = () => {

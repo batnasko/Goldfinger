@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Form, Alert} from "react-bootstrap";
 import axios from "axios";
+import date from "../common/date"
 
 class Login extends Component {
     constructor(props) {
@@ -20,7 +21,15 @@ class Login extends Component {
             "username": e.currentTarget.email.value,
             "password": e.currentTarget.password.value
         };
+        let ip = this.props.user.ip;
+        console.log(date());
         axios.post("http://localhost:8080/token", data).then(response => {
+            // axios.post("http://localhost:8080/token/auditability",{
+            //     "username": e.currentTarget.email.value,
+            //     "ip" : ip,
+            //     "date": date.date,
+            //     "msg": "Logged in"
+            // });
             this.props.setToken(response.data);
             this.props.showMainPage();
         }, error => {

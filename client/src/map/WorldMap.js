@@ -29,7 +29,7 @@ class WorldMap extends Component {
             },
             httpHeaders: {
                 headers: {
-                    Authorization: "Bearer " + this.props.token
+                    Authorization: "Bearer " + this.props.user.token
                 }
             }
         };

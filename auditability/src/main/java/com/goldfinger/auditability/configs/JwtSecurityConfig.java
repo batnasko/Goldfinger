@@ -51,6 +51,7 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/auditability/***").authenticated()
+                .antMatchers("/auditability").permitAll()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(entryPoint)
                 .and()
