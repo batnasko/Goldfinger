@@ -58,6 +58,9 @@ class UploadShp extends Component {
                         "dataType": data.shpFileName
                     });
                     returnToMap()
+                }, error =>{
+                    returnToMap();
+                    alert(error.data.message);
                 });
             };
         }
