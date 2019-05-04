@@ -60,6 +60,10 @@ class Auditability extends Component {
             this.setState({
                 logs: success.data
             })
+        }, error =>{
+            this.setState({
+                logs:[]
+            })
         })
     }
 
