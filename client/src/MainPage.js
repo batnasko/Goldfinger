@@ -41,7 +41,7 @@ class MainPage extends Component {
                     <div style={{marginLeft: "auto"}}>
                         {this.showAdminButton()}
                         <Button variant="danger" style={{marginLeft: 10, marginRight: 10}}
-                                onClick={this.props.showLoginPage}>Logout</Button> {/*after implementing security remove cookie*/}
+                                onClick={this.props.removeToken}>Logout</Button> {/*after implementing security remove cookie*/}
                     </div>
                 </Navbar>
                 {this.showContent()}

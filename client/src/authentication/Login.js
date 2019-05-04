@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Button, Form, Alert} from "react-bootstrap";
 import axios from "axios";
 import date from "../common/date"
+import Cookies from 'universal-cookie';
 
 class Login extends Component {
     constructor(props) {

@@ -3,6 +3,7 @@ import './App.css';
 import MainPage from "./MainPage";
 import LoginPage from "./LoginPage";
 import axios from "axios";
+import Cookies from "universal-cookie";
 
 class App extends Component {
     constructor(props) {
@@ -23,7 +24,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        axios.get("https://api.ipify.org?format=json").then(response =>{
+        axios.get("https://api.ipify.org?format=json").then(response => {
             this.setState({
                 user: {
                     token: this.state.user.token,
@@ -37,7 +38,11 @@ class App extends Component {
                 }
             })
         })
-
+        let cookies = new Cookies();
+        let jwtCookie = cookies.get("jwt");
+        if (jwtCookie !== undefined) {
+            this.setToken(jwtCookie);
+        }
     }
 
     showMainPage = () => {
@@ -62,6 +67,9 @@ class App extends Component {
     };
 
     setToken = (jwt) => {
+        let cookies = new Cookies();
+        let jwtCookie = cookies.set("jwt", jwt, {path: "/"});
+
         let decodedJwt = this.parseJwt(jwt);
         this.setState({
             user: {
@@ -72,11 +80,30 @@ class App extends Component {
         })
     };
 
+    removeToken = () => {
+        let cookies = new Cookies();
+        cookies.remove("jwt");
+        this.setState({
+            user: {
+                token: null,
+                userDetails: {
+                    username: null,
+                    firstName: null,
+                    lastName: null,
+                    roles: null
+                },
+                ip: this.state.user.ip
+            }
+        })
+    };
+
     showContent() {
-        if (this.state.show === "mainPage") return <MainPage showLoginPage={this.showLoginPage} user={this.state.user}/>;
-        if (this.state.show === "loginPage") return <LoginPage showMainPage={this.showMainPage}
-                                                               setToken={this.setToken}
-                                                                user={this.state.user}/>;
+        if (this.state.user.token !== null) return <MainPage
+            removeToken={this.removeToken}
+            user={this.state.user}/>;
+        else return <LoginPage showMainPage={this.showMainPage}
+                               setToken={this.setToken}
+                               user={this.state.user}/>;
     }
 
     render() {
