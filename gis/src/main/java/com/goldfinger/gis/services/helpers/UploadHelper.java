@@ -12,7 +12,8 @@ import java.io.IOException;
 @Component
 public class UploadHelper {
     private static final String EMPTY_DIRECTORY = "Provided directory is empty";
-    private static final String SHP_NOT_FOUND = "SHP not found";
+    private static final String SHP_NOT_FOUND = "SHP file not found";
+    private static final String NOT_ZIP_FILE = "Provided file isn't .zip";
 
     private static final String MYSQL_WORKBENCH_PATH = "D:/Program Files/MySQL Workbench";
     private static final String directory = "D:/TEST/";
@@ -54,7 +55,7 @@ public class UploadHelper {
             }
             zipFile.extractAll(dirToExtract);
         } catch (ZipException e) {
-            e.printStackTrace();
+            throw new IllegalArgumentException(NOT_ZIP_FILE);
         }
     }
 

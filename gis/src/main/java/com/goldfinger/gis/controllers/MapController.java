@@ -72,7 +72,11 @@ public class MapController {
     public boolean uploadFile(@RequestBody ShpFile shpFile) {
         try {
             return mapService.uploadFile(shpFile);
-        } catch (IOException e) {
+        }
+        catch (IllegalArgumentException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+        catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, FILE_NOT_UPLOADED);
         }
 

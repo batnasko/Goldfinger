@@ -59,8 +59,8 @@ class UploadShp extends Component {
                     });
                     returnToMap()
                 }, error =>{
+                    alert(error.response.data.message);
                     returnToMap();
-                    alert(error.data.message);
                 });
             };
         }
