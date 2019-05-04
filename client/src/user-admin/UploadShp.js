@@ -5,22 +5,31 @@ import Spinner from "../common/spinner.js";
 import date from "../common/date";
 
 
-
 class UploadShp extends Component {
     constructor(props) {
         super(props);
         this.state = {
             validated: false,
-            isFileUploading: false
+            isFileUploading: false,
+            isInvalidFile: false,
+            invalidFileMsg: "Upload shape file"
         }
     }
 
     uploadShp(event) {
         event.preventDefault();
-        this.setState({validated: true});
+        this.setState({
+            validated: true,
+
+        });
+
 
         const form = event.currentTarget;
         let returnToMap = this.props.showMap;
+        if (this.state.isInvalidFile){
+            return;
+        }
+
         if (form.checkValidity() === true) {
             this.setState({
                 isFileUploading: true
@@ -54,6 +63,19 @@ class UploadShp extends Component {
         }
     }
 
+    handleFileChange(e){
+        if(!e.target.value.endsWith(".zip")){
+            this.setState({
+                isInvalidFile : true,
+                invalidFileMsg: "Please upload .zip file"
+            })
+        }else{
+            this.setState({
+                isInvalidFile : false
+            })
+        }
+    }
+
     showContent() {
         if (!this.state.isFileUploading) {
             return <Form
@@ -62,17 +84,18 @@ class UploadShp extends Component {
                 onSubmit={e => this.uploadShp(e)}
             >
                 <Form.Row>
-                    <Form.Group as={Col} md="4" controlId="shapeFile">
+                    <Form.Group as={Col} md="4" controlId="shapeFile" onChange={ e => this.handleFileChange(e)}>
                         <Form.Control
                             required
                             type="file"
                             placeholder="Shape file"
                             style={{display: "none"}}
                             ref={fileInput => this.fileInput = fileInput}
+                            isInvalid={this.state.isInvalidFile}
                         />
                         <Button style={{display: "block"}} variant="success" onClick={() => this.fileInput.click()}>Select
                             file</Button>
-                        <Form.Control.Feedback type="invalid">Upload shape file</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">{this.state.invalidFileMsg}</Form.Control.Feedback>
                     </Form.Group>
                 </Form.Row>
                 <Form.Row>
