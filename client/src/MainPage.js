@@ -19,7 +19,6 @@ class MainPage extends Component {
     };
 
     showContent() {
-        console.log(this.props.user);
         if (this.state.show === "map") return <WorldMap user={this.props.user}/>;
         if (this.state.show === "adminPanel") return <AdminPanel user={this.props.user} showMap={this.showMap}/>;
     }

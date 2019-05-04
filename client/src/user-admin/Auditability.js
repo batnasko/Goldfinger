@@ -8,6 +8,7 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import ToolkitProvider, {CSVExport} from 'react-bootstrap-table2-toolkit';
 import axios from "axios";
+import date from "../common/date";
 
 const {ExportCSVButton} = CSVExport;
 
@@ -60,6 +61,7 @@ class Auditability extends Component {
             })
         })
     }
+
 
     render() {
         return (

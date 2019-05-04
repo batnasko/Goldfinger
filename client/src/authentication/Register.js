@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Form, Row, Col, Alert} from "react-bootstrap";
 import axios from "axios";
+import date from "../common/date";
 
 class Register extends Component {
     constructor(props) {
@@ -46,9 +47,22 @@ class Register extends Component {
             "firstName": e.currentTarget.firstName.value.trim(),
             "lastName": e.currentTarget.lastName.value.trim()
         };
+        let ip = this.props.user.ip;
         axios.post("http://localhost:8080", data).then(response => {
+            axios.post("http://localhost:8000/auditability",{
+                "username": data.username,
+                "ip" : ip,
+                "date": date(),
+                "msg": "Registered"
+            });
             this.props.showLogin();
         }, error => {
+            axios.post("http://localhost:8000/auditability",{
+                "username": data.username,
+                "ip" : ip,
+                "date": date(),
+                "msg": "Tried to register"
+            });
             this.setState({
                 email: {
                     invalidMsg: "Email is already used",

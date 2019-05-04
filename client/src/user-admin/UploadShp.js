@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Button, Form, Col, InputGroup} from "react-bootstrap";
 import axios from "axios";
 import Spinner from "../common/spinner.js";
+import date from "../common/date";
 
 
 
@@ -27,6 +28,7 @@ class UploadShp extends Component {
             let token = this.props.user.token;
             var reader = new FileReader();
             reader.readAsDataURL(form.shapeFile.files[0]);
+            let user = this.props.user;
             reader.onload = function () {
                 let data = {
                     "file": reader.result,
@@ -38,9 +40,16 @@ class UploadShp extends Component {
                     headers: {
                         Authorization: "Bearer " + token
                     }
-                }).then(response =>
+                }).then(response => {
+                    axios.post("http://localhost:8000/auditability", {
+                        "username": user.userDetails.username,
+                        "ip": user.ip,
+                        "date": date(),
+                        "msg": "Uploaded " + data.shpFileName,
+                        "dataType": data.shpFileName
+                    });
                     returnToMap()
-                );
+                });
             };
         }
     }

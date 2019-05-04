@@ -3,6 +3,7 @@ import {Map, TileLayer, GeoJSON, Tooltip, Popup} from "react-leaflet";
 import axios from "axios"
 import {Navbar, Dropdown, Button, Alert} from 'react-bootstrap';
 import "./WorldMap.css"
+import date from "../common/date";
 
 
 class WorldMap extends Component {
@@ -89,6 +90,13 @@ class WorldMap extends Component {
                 latitude: e.latlng.lng,
                 longitude: e.latlng.lat
             };
+            axios.post("http://localhost:8000/auditability",{
+                "username": this.props.user.userDetails.username,
+                "ip" : this.props.user.ip,
+                "date": date(),
+                "msg": "Asked for "+this.state.currentDataType.dataType + " data for point lat:" + data.longitude + " lng:"+data.latitude,
+                "dataType": this.state.currentDataType.dataType
+            });
             axios.post("http://localhost:9000/map/shape/" + this.state.currentDataType.id, data, this.props.httpHeaders).then(response => {
                 this.setState({
                     shapes: [...this.state.shapes, response.data]
@@ -127,6 +135,13 @@ class WorldMap extends Component {
                 }
             })
         } else {
+            axios.post("http://localhost:8000/auditability",{
+                "username": this.props.user.userDetails.username,
+                "ip" : this.props.user.ip,
+                "date": date(),
+                "msg": "Asked for all data for "+this.state.currentDataType.dataType + " data type",
+                "dataType": this.state.currentDataType.dataType
+            });
             axios.get("http://localhost:9000/map/shape/" + this.state.currentDataType.id, this.state.httpHeaders).then(response => {
                 this.setState({
                     shapes: response.data
