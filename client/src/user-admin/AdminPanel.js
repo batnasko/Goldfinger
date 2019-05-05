@@ -5,6 +5,7 @@ import './AdminPanel.css';
 
 import Auditability from "./Auditability";
 import UploadShp from "./UploadShp";
+import DataOptions from "./DataOptions";
 
 
 class AdminPanel extends Component {
@@ -21,6 +22,7 @@ class AdminPanel extends Component {
     showContent(){
         if (this.state.show === "auditability") return <Auditability user ={this.props.user}/>
         else if(this.state.show === "uploadShp") return <UploadShp user={this.props.user} showMap={this.props.showMap}/>
+        else if(this.state.show === "dataOptions") return <DataOptions user={this.props.user}/>
     }
 
     render() {
@@ -34,6 +36,7 @@ class AdminPanel extends Component {
                     <Navbar.Brand>Admin Panel</Navbar.Brand>
                     <Button style={marginNavItems} variant="danger" onClick = {()=> this.setState({show : "auditability"})}>Auditability</Button>
                     <Button style={marginNavItems} variant="danger" onClick = {()=> this.setState({show : "uploadShp"})}>Upload</Button>
+                    <Button style={marginNavItems} variant="danger" onClick = {()=> this.setState({show : "dataOptions"})}>Data options</Button>
                 </Navbar>
                 <div className="content-container">
                     {this.showContent()}

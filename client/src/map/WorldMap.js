@@ -4,6 +4,7 @@ import axios from "axios"
 import {Navbar, Dropdown, Button, Alert} from 'react-bootstrap';
 import "./WorldMap.css"
 import date from "../common/date";
+import {forEach} from "react-bootstrap/es/utils/ElementChildren";
 
 
 class WorldMap extends Component {
@@ -41,7 +42,12 @@ class WorldMap extends Component {
         axios.get("http://localhost:9000/map/datatype", this.state.httpHeaders).then(response => {
             response.data.map((dataType) => {
                 axios.get("http://localhost:9000/map/datatype/" + dataType.id + "/property", this.state.httpHeaders).then(response => {
-                    dataType["properties"] = response.data;
+                    dataType["properties"] = []
+                    response.data.map(property =>{
+                        if (property.show === true){
+                            dataType["properties"].push(property.properties);
+                        }
+                    });
 
                     this.setState(prevState => ({
                         dataTypes: [...prevState.dataTypes, dataType]
