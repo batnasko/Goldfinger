@@ -57,7 +57,6 @@ public class AuditabilityServiceImpl implements AuditabilityService {
                 String[] searchSplit = search.split("=");
                 logIds = auditabilityRepository.searchExactTextInPairs(searchSplit[0].trim(), searchSplit[1].trim(), searchFilter.getFilter());
             } else {
-                System.out.println("full text");
                 String[] words = search.split(" ");
                 StringBuilder searchParsed = new StringBuilder();
                 for (int i = 0; i < words.length; i++) {
@@ -67,12 +66,7 @@ public class AuditabilityServiceImpl implements AuditabilityService {
                     }
                     searchParsed.append(words[i]).append(" ");
                 }
-                System.out.println(searchParsed.toString());
                 logIds = auditabilityRepository.fullTextSearch(searchParsed.toString());
-                System.out.println(logIds.size());
-                for (int i = 0; i < logIds.size(); i++) {
-                    System.out.println(logIds.get(i));
-                }
             }
         }
 

@@ -17,7 +17,6 @@ import java.util.*;
 @PropertySource("classpath:application.properties")
 public class AuditabilityRepositoryImpl implements AuditabilityRepository {
     private static final String COULDNT_INSERT_LOG_ID = "Couldn't insert new log id";
-    private static final String COULDNT_INSERT_WORD = "Couldn't insert new word";
     private static final String LOG_NOT_FOUND = "Log not found";
 
     private String dbUrl, username, password;
@@ -69,64 +68,10 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
     }
 
     @Override
-    public long getWordId(String word) {
-        String sql = "SELECT id FROM words where word ='" + word + "';";
-        try (
-                Connection connection = DriverManager.getConnection(dbUrl, username, password);
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sql)
-        ) {
-            if (resultSet.next()) {
-                return resultSet.getLong("id");
-            }
-            throw new IllegalArgumentException();
-        } catch (SQLException e) {
-            throw new ResourceAccessException(e.getMessage());
-        }
-    }
-
-    @Override
-    public long addWord(String word) {
-        String sql = "INSERT INTO words(word) VALUES('" + word + "');";
-        return executeQueryAndReturnGeneratedId(sql, COULDNT_INSERT_WORD);
-    }
-
-    @Override
-    public boolean addWordLogRelation(long wordId, long logId) {
-        String sql = "INSERT INTO word_log(word_id, log_id) VALUES('" + wordId + "','" + logId + "');";
-        try (
-                Connection connection = DriverManager.getConnection(dbUrl, username, password);
-                Statement statement = connection.createStatement()
-        ) {
-            return statement.execute(sql);
-        } catch (SQLException e) {
-            throw new ResourceAccessException(e.getMessage());
-        }
-    }
-
-    @Override
     public List<Integer> getAllLogs(Filter filter) {
         String sql = "SELECT distinct log_id from pairs";
         sql = addOrderToQuery(sql, filter);
         return executeSearchQuery(sql);
-    }
-
-    @Override
-    public Set<Integer> wordOccurrences(String wordsToSearch) {
-        String sql = "SELECT distinct log_id from word_log join words on word_id = words.id where word = '" + wordsToSearch + "';";
-        try (
-                Connection connection = DriverManager.getConnection(dbUrl, username, password);
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sql)
-        ) {
-            Set<Integer> logs = new HashSet<>();
-            while (resultSet.next()) {
-                logs.add(resultSet.getInt("log_id"));
-            }
-            return logs;
-        } catch (SQLException e) {
-            throw new ResourceAccessException(e.getMessage());
-        }
     }
 
     @Override
