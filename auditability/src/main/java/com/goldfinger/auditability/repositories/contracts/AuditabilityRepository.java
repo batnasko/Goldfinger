@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 public interface AuditabilityRepository {
-    long addNewLog();
+    long addNewLog(String log);
 
     Map<String, String> getLog(long logId);
 
@@ -28,6 +28,8 @@ public interface AuditabilityRepository {
     List<Integer> searchWordInPair(String key, String value, Filter filter);
 
     List<Integer> searchExactTextInPairs(String key, String value, Filter filter);
+
+    List<Integer> fullTextSearch(String search);
 
 
 }

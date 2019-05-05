@@ -32,9 +32,9 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
     }
 
     @Override
-    public long addNewLog() {
-        String sql = "INSERT INTO logs VALUES() ;";
-        return executeQueryAndReturnGeneratedId(sql,COULDNT_INSERT_LOG_ID);
+    public long addNewLog(String log) {
+        String sql = "INSERT INTO logs(log) VALUES('" + log + "') ;";
+        return executeQueryAndReturnGeneratedId(sql, COULDNT_INSERT_LOG_ID);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
     @Override
     public long addWord(String word) {
         String sql = "INSERT INTO words(word) VALUES('" + word + "');";
-        return executeQueryAndReturnGeneratedId(sql,COULDNT_INSERT_WORD);
+        return executeQueryAndReturnGeneratedId(sql, COULDNT_INSERT_WORD);
     }
 
     @Override
@@ -150,6 +150,12 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
         return executeSearchQuery(sql);
     }
 
+    @Override
+    public List<Integer> fullTextSearch(String search) {
+        String sql = "select log_id from logs where match(log) AGAINST('" + search + "' in boolean mode);";
+        return executeSearchQuery(sql);
+    }
+
     private String addOrderToQuery(String sql, Filter filter) {
         if (filter != null) {
             sql += " and key_ = '" + filter.getSortBy() + "' ORDER BY value_ " + filter.getOrder() + ";";
@@ -173,7 +179,7 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
         }
     }
 
-    private long executeQueryAndReturnGeneratedId(String sql, String errorMsg){
+    private long executeQueryAndReturnGeneratedId(String sql, String errorMsg) {
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
                 PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
