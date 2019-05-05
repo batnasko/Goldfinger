@@ -51,16 +51,16 @@ public class AuditabilityServiceImpl implements AuditabilityService {
             logIds = auditabilityRepository.getAllLogs(searchFilter.getFilter());
         } else {
             search = search.trim();
-            search = search.replaceAll("[^ \".:=a-zA-Z0-9]", "");
-            if (search.contains("=")) {
-                String[] searchSplit = search.split("=");
-                logIds = auditabilityRepository.searchExactTextInPairs(searchSplit[0].trim(), searchSplit[1].trim(), searchFilter.getFilter());
-            } else if (search.contains(":")) {
-                String[] searchSplit = search.split(":");
-                logIds = auditabilityRepository.searchWordInPair(searchSplit[0].trim(), searchSplit[1].trim(), searchFilter.getFilter());
-            } else if (search.startsWith("\"") && search.endsWith("\"")) {
+
+            if (search.startsWith("\"") && search.endsWith("\"")) {
                 search = search.substring(1, search.length() - 1);
                 logIds = auditabilityRepository.searchPhrase(search, searchFilter.getFilter());
+            } else if (isDoubleDotSearch(search)) {
+                String[] searchSplit = search.split(":", 2);
+                logIds = auditabilityRepository.searchWordInPair(searchSplit[0].trim(), searchSplit[1].trim(), searchFilter.getFilter());
+            } else if (isEqualSearch(search)) {
+                String[] searchSplit = search.split("=");
+                logIds = auditabilityRepository.searchExactTextInPairs(searchSplit[0].trim(), searchSplit[1].trim(), searchFilter.getFilter());
             } else {
                 String[] words = search.split(" ");
                 Set<Integer> allLogs = new HashSet<>();
@@ -104,5 +104,20 @@ public class AuditabilityServiceImpl implements AuditabilityService {
             throw new IllegalArgumentException(NO_COLUMNS_TO_EXPORT);
         }
         return parser.logsToCSV(getLogs(export.getSearchFilter()), export.getColumnsToExport());
+    }
+
+    private boolean isEqualSearch(String search) {
+        return (search.length() - search.replaceAll("=", "").length()) == 1
+                && (search.length() != search.indexOf('=') + 1)
+                && (search.indexOf('=') != 0);
+    }
+
+    private boolean isDoubleDotSearch(String search) {
+        if (!search.startsWith(":") && !search.endsWith(":") && search.contains(":")) {
+            String[] searchSplit = search.split(":", 2);
+            searchSplit[0] = searchSplit[0].trim();
+            searchSplit[1] = searchSplit[1].trim();
+            return !Character.isDigit(searchSplit[0].charAt(searchSplit[0].length() - 1)) || !Character.isDigit(searchSplit[1].charAt(0));
+        } else return false;
     }
 }
