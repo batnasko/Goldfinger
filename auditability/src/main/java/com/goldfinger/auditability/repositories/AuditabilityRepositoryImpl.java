@@ -131,8 +131,7 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
 
     @Override
     public List<Integer> searchPhrase(String phrase, Filter filter) {
-        String sql = "SELECT distinct log_id from pairs WHERE log_id IN (SELECT log_id from pairs where value_ like '%" + phrase + "%')";
-        sql = addOrderToQuery(sql, filter);
+        String sql = "select log_id from pairs where match(key_, value_) AGAINST('\"" + phrase + "\"' in boolean mode) group by log_id order by sum(match(key_, value_) AGAINST('\"" + phrase + "\"' in boolean mode)) DESC;";
         return executeSearchQuery(sql);
     }
 
