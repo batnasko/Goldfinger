@@ -40,18 +40,27 @@ class WorldMap extends Component {
 
     componentDidMount() {
         axios.get("http://localhost:9000/map/datatype", this.state.httpHeaders).then(response => {
-            response.data.map((dataType) => {
+            response.data.filter(function (dataType) {
+                return dataType.rowToColor !== "";
+            }).map((dataType) => {
                 axios.get("http://localhost:9000/map/datatype/" + dataType.id + "/property", this.state.httpHeaders).then(response => {
-                    dataType["properties"] = []
-                    response.data.map(property =>{
-                        if (property.show === true){
-                            dataType["properties"].push(property.properties);
-                        }
+                    let show = false;
+                    response.data.map(property => {
+                        if (property.show === true) show = true;
                     });
 
-                    this.setState(prevState => ({
-                        dataTypes: [...prevState.dataTypes, dataType]
-                    }))
+                    if (show === true) {
+                        dataType["properties"] = [];
+                        response.data.map(property => {
+                            if (property.show === true) {
+                                dataType["properties"].push(property.properties);
+                            }
+                        });
+
+                        this.setState(prevState => ({
+                            dataTypes: [...prevState.dataTypes, dataType]
+                        }))
+                    }
                 })
             });
         });
@@ -75,8 +84,8 @@ class WorldMap extends Component {
             shapes: []
         });
         this.setState({
-            noInfoPopup:{
-                show:false
+            noInfoPopup: {
+                show: false
             }
         });
     }
@@ -84,8 +93,8 @@ class WorldMap extends Component {
 
     getShape(e) {
         this.setState({
-            noInfoPopup:{
-                show:false
+            noInfoPopup: {
+                show: false
             }
         });
         if (this.state.currentDataType.id === 0) {
