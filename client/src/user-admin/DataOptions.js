@@ -49,10 +49,10 @@ class DataOptions extends Component {
     }
 
     handleRadioChange = event => {
-        axios.put("http://localhost:9000/map/datatype",{
+        axios.put("http://localhost:9000/map/datatype", {
             id: this.state.currentDataType,
             rowToColor: event.target.value
-        } ,{
+        }, {
             headers: {
                 Authorization: "Bearer " + this.props.user.token
             }
@@ -64,11 +64,11 @@ class DataOptions extends Component {
         let currDataOpt = this.state.currentDataOptions;
         currDataOpt[name] = !currDataOpt[name];
 
-        axios.put("http://localhost:9000/map/datatype/property",{
+        axios.put("http://localhost:9000/map/datatype/property", {
             dataTypeId: this.state.currentDataType,
             properties: name,
             show: currDataOpt[name]
-        } ,{
+        }, {
             headers: {
                 Authorization: "Bearer " + this.props.user.token
             }
@@ -90,8 +90,7 @@ class DataOptions extends Component {
                 Authorization: "Bearer " + this.props.user.token
             }
         }).then(response => {
-            console.log(JSON.stringify(response.data));
-            response.data.map(property =>{
+            response.data.map(property => {
                 this.addDataType(property);
             })
         })
@@ -102,22 +101,23 @@ class DataOptions extends Component {
             }
         }).then(response => {
             this.setState({
-                rowToColor:response.data.rowToColor
+                rowToColor: response.data.rowToColor
             })
         })
     }
-    addDataType(property){
+
+    addDataType(property) {
         let curDataOpt = this.state.currentDataOptions;
         curDataOpt[property.properties] = property.show;
         this.setState({
-            currentDataOptions:curDataOpt
+            currentDataOptions: curDataOpt
         })
     }
 
     render() {
         return (
             <div>
-                <Tab.Container id="left-tabs-example">
+                <Tab.Container id="data-types">
                     <Row>
                         <Col sm={3}>
                             <Nav variant="pills" className="flex-column">
@@ -129,25 +129,33 @@ class DataOptions extends Component {
                         <Col sm={4}>
                             <Tab.Content>
                                 <Tab.Pane eventKey={this.state.currentDataType}>
-                                    {this.state.showTables &&
-                                    <div>
-                                        <div className="data-option-title">
+                                    <div className="data-option-title">
+                                        <div className="data-option-title" style={{"font-size": "18px"}}>
                                             Columns to show
                                         </div>
-                                        <FormControl component="fieldset">
-                                            <FormGroup>
-                                                {Object.keys(this.state.currentDataOptions).map(key => <FormControlLabel
-                                                    control={
-                                                        <Checkbox checked={this.state.currentDataOptions[key]}
-                                                                  onChange={e => this.handleCheckChange(key)}
-                                                                  value={this.state.currentDataOptions[key]}/>
+                                        <div style={{"text-align": "left", "padding-left": "10px"}}>
+                                            <FormControl component="fieldset">
+                                                <FormGroup>
+                                                    {
+                                                        Object.keys(this.state.currentDataOptions).map(key =>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Checkbox
+                                                                        checked={this.state.currentDataOptions[key]}
+                                                                        onChange={e => this.handleCheckChange(key)}
+                                                                        value={this.state.currentDataOptions[key]}
+                                                                        style={{
+                                                                            color: "#dc3545"
+                                                                        }}
+                                                                    />
+                                                                }
+                                                                label={key}
+                                                            />)
                                                     }
-                                                    label={key}
-                                                />)}
-                                            </FormGroup>
-                                        </FormControl>
+                                                </FormGroup>
+                                            </FormControl>
+                                        </div>
                                     </div>
-                                    }
                                 </Tab.Pane>
                             </Tab.Content>
                         </Col>
@@ -155,24 +163,32 @@ class DataOptions extends Component {
                             <Tab.Content>
                                 <Tab.Pane eventKey={this.state.currentDataType}>
                                     <div className="data-option-title">
-                                        Column to color
+                                        <div className="data-option-title" style={{"font-size": "18px"}}>
+                                            Column to color
+                                        </div>
+                                        <div style={{"text-align": "left", "padding-left": "10px"}}>
+                                            <FormControl component="fieldset">
+                                                <RadioGroup
+                                                    aria-label="Row to color"
+                                                    name="rowToColor"
+                                                    value={this.state.rowToColor}
+                                                    onChange={this.handleRadioChange}
+                                                >
+                                                    {Object.keys(this.state.currentDataOptions).map(key =>
+                                                        <FormControlLabel
+                                                            value={key}
+                                                            control={
+                                                                <Radio style={{
+                                                                    color: "#dc3545"
+                                                                }}/>
+                                                            }
+
+                                                            label={key}
+                                                        />)}
+                                                </RadioGroup>
+                                            </FormControl>
+                                        </div>
                                     </div>
-                                    <FormControl component="fieldset">
-                                        <RadioGroup
-                                            aria-label="Row to color"
-                                            name="rowToColor"
-                                            value={this.state.rowToColor}
-                                            onChange={this.handleRadioChange}
-                                        >
-                                            {Object.keys(this.state.currentDataOptions).map(key => <FormControlLabel
-                                                value={key}
-                                                control={
-                                                    <Radio/>
-                                                }
-                                                label={key}
-                                            />)}
-                                        </RadioGroup>
-                                    </FormControl>
                                 </Tab.Pane>
                             </Tab.Content>
                         </Col>
