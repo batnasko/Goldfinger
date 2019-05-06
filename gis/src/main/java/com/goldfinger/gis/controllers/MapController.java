@@ -78,16 +78,10 @@ public class MapController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/upload")
     @ResponseStatus(value = HttpStatus.CREATED, reason = FILE_UPLOADED)
-    public boolean uploadFile(@RequestBody ShpFile shpFile) {
-        try {
+    public boolean uploadFile(@RequestBody ShpFile shpFile) throws IOException {
+
             return mapService.uploadFile(shpFile);
-        }
-        catch (IllegalArgumentException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
-        catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, FILE_NOT_UPLOADED);
-        }
+
 
     }
 
