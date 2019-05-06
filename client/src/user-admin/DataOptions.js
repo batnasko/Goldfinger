@@ -19,18 +19,9 @@ class DataOptions extends Component {
 
 
             showTables: false,
-            dataTypes: [{
-                id: 1,
-                dataType: "Soil Types"
-            },
-                {
-                    id: 2,
-                    dataType: "Earthquake"
-                }],
+            dataTypes: [],
             currentDataType: 0,
             currentDataOptions: {
-                domsoi: true,
-                faosoi: false
             },
 
         };
