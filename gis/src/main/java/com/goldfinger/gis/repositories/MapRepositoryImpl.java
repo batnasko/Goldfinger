@@ -12,8 +12,7 @@ import org.springframework.web.client.ResourceAccessException;
 
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Repository
 @PropertySource("classpath:application.properties")

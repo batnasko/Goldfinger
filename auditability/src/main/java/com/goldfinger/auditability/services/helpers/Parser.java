@@ -1,8 +1,7 @@
 package com.goldfinger.auditability.services.helpers;
 
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Parser {
     public String logsToCSV(List<Map<String, String>> logs, String[] columnsToExport) {

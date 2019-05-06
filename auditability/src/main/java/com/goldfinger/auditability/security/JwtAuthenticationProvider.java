@@ -1,8 +1,6 @@
 package com.goldfinger.auditability.security;
 
-
-import com.goldfinger.auditability.models.security.JwtAuthenticationToken;
-import com.goldfinger.auditability.models.security.JwtUserDetails;
+import com.goldfinger.auditability.models.security.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;

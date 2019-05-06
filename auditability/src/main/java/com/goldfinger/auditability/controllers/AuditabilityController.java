@@ -1,7 +1,6 @@
 package com.goldfinger.auditability.controllers;
 
-import com.goldfinger.auditability.models.Export;
-import com.goldfinger.auditability.models.SearchFilter;
+import com.goldfinger.auditability.models.*;
 import com.goldfinger.auditability.services.contracts.AuditabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,9 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/auditability")

@@ -3,14 +3,10 @@ package com.goldfinger.authentication.security;
 
 import com.goldfinger.authentication.models.JwtAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.*;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.io.IOException;
 
 public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessingFilter {

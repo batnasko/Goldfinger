@@ -1,10 +1,7 @@
 package com.goldfinger.auditability.security;
 
-
 import com.goldfinger.auditability.models.security.JwtUserDetails;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 

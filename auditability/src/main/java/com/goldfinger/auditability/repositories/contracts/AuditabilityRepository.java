@@ -2,8 +2,7 @@ package com.goldfinger.auditability.repositories.contracts;
 
 import com.goldfinger.auditability.models.Filter;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public interface AuditabilityRepository {
     long addNewLog(String log);

@@ -1,11 +1,8 @@
 package com.goldfinger.authentication.security;
 
 
-import com.goldfinger.authentication.models.JwtUser;
 import com.goldfinger.authentication.models.JwtUserDetails;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 

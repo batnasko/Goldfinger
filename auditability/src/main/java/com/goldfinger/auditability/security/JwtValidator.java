@@ -1,13 +1,10 @@
 package com.goldfinger.auditability.security;
 
-import com.goldfinger.auditability.models.security.JwtUserDetails;
-import com.goldfinger.auditability.models.security.Role;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import com.goldfinger.auditability.models.security.*;
+import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 @Component
 public class JwtValidator {

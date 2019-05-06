@@ -1,14 +1,10 @@
 package com.goldfinger.authentication.security;
 
-import com.goldfinger.authentication.models.JwtUserDetails;
-import com.goldfinger.authentication.models.Role;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import org.springframework.security.core.authority.AuthorityUtils;
+import com.goldfinger.authentication.models.*;
+import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 @Component
 public class JwtValidator {

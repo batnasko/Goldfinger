@@ -1,19 +1,14 @@
 package com.goldfinger.authentication.services;
 
-import com.goldfinger.authentication.models.JwtUserDetails;
-import com.goldfinger.authentication.models.Role;
+import com.goldfinger.authentication.models.*;
 import com.goldfinger.authentication.repositories.UserRepository;
 import com.goldfinger.authentication.security.JwtGenerator;
 import com.goldfinger.authentication.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import javax.persistence.*;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
