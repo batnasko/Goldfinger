@@ -71,9 +71,7 @@ class UploadShp extends Component {
             reader.onload = function () {
                 let data = {
                     "file": reader.result,
-                    "shpFileName": form.shapeType.value,
-                    "columnsToShow": form.columnsToDisplay.value,
-                    "columnToColor": form.columnToColor.value
+                    "shpFileName": form.shapeType.value
                 };
                 axios.post("http://localhost:9000/map/upload", data, {
                     headers: {
@@ -150,22 +148,6 @@ class UploadShp extends Component {
                                 placeholder="Shape file type"
                             />
                             <Form.Control.Feedback type="invalid">Enter shape file type</Form.Control.Feedback>
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group as={Col} md="6" controlId="columnsToDisplay">
-                            <Form.Label>Columns to display</Form.Label>
-                            <Form.Control type="text" placeholder="Enter columns separated by whitespaces" required/>
-                            <Form.Control.Feedback type="invalid">
-                                Please enter columns
-                            </Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group as={Col} md="3" controlId="columnToColor">
-                            <Form.Label>Column to color</Form.Label>
-                            <Form.Control type="text" placeholder="Column to color" required/>
-                            <Form.Control.Feedback type="invalid">
-                                Please enter column to color on the map
-                            </Form.Control.Feedback>
                         </Form.Group>
                     </Form.Row>
                     <Button type="submit" variant="danger">Upload</Button>
