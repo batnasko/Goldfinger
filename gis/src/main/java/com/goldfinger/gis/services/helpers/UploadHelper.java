@@ -13,6 +13,7 @@ import java.io.IOException;
 public class UploadHelper {
     private static final String EMPTY_DIRECTORY = "Provided directory is empty";
     private static final String SHP_NOT_FOUND = "SHP file not found";
+    private static final String DBF_NOT_FOUND = "DBF file not found";
     private static final String NOT_ZIP_FILE = "Provided file isn't .zip";
 
     private static final String MYSQL_WORKBENCH_PATH = "D:/Program Files/MySQL Workbench";
@@ -73,7 +74,7 @@ public class UploadHelper {
             }
         }
         if (SHP == null) {
-            throw new IllegalArgumentException(SHP_NOT_FOUND);
+            throw new IllegalArgumentException(DBF_NOT_FOUND);
         }
 
         SHP = SHP.replace(".shp", "");
@@ -85,5 +86,23 @@ public class UploadHelper {
                 "cmd.exe", "/c", "cd /d " + MYSQL_WORKBENCH_PATH + " && ogr2ogr -f MySQL MySQL:goldfingergis,host=localhost,port=3306,user=root,password=admin " + shpFilePath + ".shp -nln " + tableToFetch + " -update -overwrite -lco engine=MYISAM");
         builder.redirectErrorStream(true);
         builder.start();
+    }
+
+    public void checkForDbf(){
+        File folder = new File(directory + dirName);
+        File[] listOfFiles = folder.listFiles();
+
+        if (listOfFiles == null) {
+            throw new IllegalArgumentException(EMPTY_DIRECTORY);
+        }
+        String DBF = null;
+        for (File listOfFile : listOfFiles) {
+            if (listOfFile.isFile()) {
+                if (listOfFile.getName().endsWith(".dbf")) DBF = listOfFile.getName();
+            }
+        }
+        if (DBF == null) {
+            throw new IllegalArgumentException(DBF_NOT_FOUND);
+        }
     }
 }

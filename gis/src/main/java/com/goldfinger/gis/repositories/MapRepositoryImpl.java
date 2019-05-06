@@ -110,16 +110,20 @@ public class MapRepositoryImpl implements MapRepository {
     }
 
     @Override
-    public List<String> getDataProperties(int dataTypeId) {
-        String sql = "SELECT PROPERTY FROM dataproperties WHERE dataType_id = " + dataTypeId;
+    public List<DataProperties> getDataProperties(int dataTypeId) {
+        String sql = "SELECT * FROM dataproperties WHERE dataType_id = " + dataTypeId;
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(sql)
         ) {
-            List<String> dataProperties = new ArrayList<>();
+            List<DataProperties> dataProperties = new ArrayList<>();
             while (resultSet.next()) {
-                dataProperties.add(resultSet.getString("property"));
+                DataProperties dataProperty = new DataProperties();
+                dataProperty.setDataTypeId(dataTypeId);
+                dataProperty.setProperties(resultSet.getString("property"));
+                dataProperty.setShow(resultSet.getBoolean("showProperty"));
+                dataProperties.add(dataProperty);
             }
             return dataProperties;
         } catch (SQLException e) {
@@ -145,12 +149,58 @@ public class MapRepositoryImpl implements MapRepository {
     }
 
     @Override
-    public void saveNewColumnToDisplay(long dataTypeId, String column) {
-        String sql = "INSERT INTO dataproperties(dataType_id, property) VALUES ('" + dataTypeId + "','" + column + "');";
+    public void saveNewColumnToDisplay(long dataTypeId, String column, boolean show) {
+        String sql = "INSERT INTO dataproperties(dataType_id, property,showProperty) VALUES ('" + dataTypeId + "','" + column + "',"+ show+");";
         try (Connection connection = DriverManager.getConnection(dbUrl, username, password);
              Statement statement = connection.createStatement();
         ) {
             statement.execute(sql);
+        } catch (SQLException e) {
+            throw new ResourceAccessException(e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean changeProperty(int dataTypeId, String property, boolean show) {
+        String sql = "UPDATE dataproperties SET showProperty = " + show + " WHERE dataType_id = " + dataTypeId + " and property = '" + property + "'";
+        return executeUpdateQuery(sql);
+    }
+
+    @Override
+    public boolean changeDataType(int dataTypeId, String rowToColor) {
+        String sql = "UPDATE datatypes SET row_to_color = '" + rowToColor + "' WHERE id = " + dataTypeId;
+        return executeUpdateQuery(sql);
+    }
+
+    @Override
+    public List<String> getDataTypeMetaDataColumns(String tableName) {
+        String sql = "SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='goldfingergis' AND `TABLE_NAME`='"+tableName+"'";
+        try (
+                Connection connection = DriverManager.getConnection(dbUrl, username, password);
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql)
+        ) {
+            List<String> metaData = new ArrayList<>();
+            while (resultSet.next()) {
+                String columnName = resultSet.getString("COLUMN_NAME");
+                if (columnName.equals("OGR_FID") || columnName.equals("SHAPE")){
+                    continue;
+                }
+                System.out.println(columnName);
+                metaData.add(columnName);
+            }
+            return metaData;
+        } catch (SQLException e) {
+            throw new ResourceAccessException(e.getMessage());
+        }
+    }
+
+    private boolean executeUpdateQuery(String sql) {
+        try (Connection connection = DriverManager.getConnection(dbUrl, username, password);
+             Statement statement = connection.createStatement()
+        ) {
+            statement.executeUpdate(sql);
+            return true;
         } catch (SQLException e) {
             throw new ResourceAccessException(e.getMessage());
         }

@@ -37,6 +37,15 @@ public class MapController {
         }
     }
 
+    @GetMapping("/datatype/{dataTypeId}")
+    public DataType getDataType(@PathVariable int dataTypeId){
+        try {
+            return mapService.getDataType(dataTypeId);
+        } catch (ResourceAccessException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
     @GetMapping("/shape/{dataTypeId}")
     public List<Shape> getAllShapes(@PathVariable int dataTypeId) {
         try {
@@ -58,7 +67,7 @@ public class MapController {
     }
 
     @GetMapping("/datatype/{dataTypeId}/property")
-    public List<String> getDataProperties(@PathVariable int dataTypeId) {
+    public List<DataProperties> getDataProperties(@PathVariable int dataTypeId) {
         try {
             return mapService.getDataProperties(dataTypeId);
         } catch (ResourceAccessException e) {
@@ -80,6 +89,19 @@ public class MapController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, FILE_NOT_UPLOADED);
         }
 
+    }
+
+
+    @PutMapping("/datatype/property")
+    @ResponseStatus(value = HttpStatus.OK, reason = FILE_UPLOADED)
+    public boolean changeProperty(@RequestBody DataProperties dataProperties){
+        return mapService.changeProperty(dataProperties);
+    }
+
+    @PutMapping("/datatype")
+    @ResponseStatus(value = HttpStatus.OK, reason = FILE_UPLOADED)
+    public boolean changeDataType(@RequestBody DataType dataType){
+        return mapService.changeDataType(dataType);
     }
 
 }

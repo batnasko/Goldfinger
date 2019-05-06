@@ -2,17 +2,10 @@ package com.goldfinger.gis.models;
 
 public class DataProperties {
 
-    private int id;
     private int dataTypeId;
     private String properties;
+    private boolean show;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getDataTypeId() {
         return dataTypeId;
@@ -28,5 +21,13 @@ public class DataProperties {
 
     public void setProperties(String properties) {
         this.properties = properties;
+    }
+
+    public boolean getShow() {
+        return show;
+    }
+
+    public void setShow(boolean show) {
+        this.show = show;
     }
 }

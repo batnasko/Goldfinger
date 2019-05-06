@@ -22,24 +22,9 @@ CREATE TABLE dataProperties
     id INT NOT NULL AUTO_INCREMENT,
     dataType_id INT NOT NULL,
 	property varchar(80) NOT NULL,
+    showProperty TINYINT(1) NOT NULL,
     PRIMARY KEY(id),
 	FOREIGN KEY (dataType_id) REFERENCES dataTypes(id)
 );
--- HAVE TO IMPLEMENT COLORS ????????????????????????????
 
-
-INSERT INTO dataTypes(dataType, tableName, row_to_color) VALUES ("Soil Types", "soils", "domsoi"),
-												  ("Earthquake Frequency", "earthquakes", "dn");
-                                                  
-INSERT INTO dataProperties(dataType_id, property) VALUES (1,"faosoil"),
-														 (1,"domsoi"),
-															(1,"sqkm"),
-														  (1,"country"),
-                                                          (2,"dn");
-
-select * from soils;
-select * from earthquakes;
-select * from datatypes;
-select * from dataProperties;
-
-SELECT * FROM earthquakes WHERE CONTAINS(SHAPE,Point(129.53,72.7));
+                                        

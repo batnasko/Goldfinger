@@ -1,0 +1,22 @@
+.data-option-title{
+    text-align: center;
+    border-radius: 0.25rem;
+    border: 1px solid #dee2e6
+}
+
+.nav-link{
+    color: #dc3545;
+}
+
+.nav-link:hover{
+    color: #c82333;
+}
+
+.nav-link.active{
+    color: #ffffff !important;
+    background-color: #dc3545 !important;
+}
+
+.MuiCheckbox-checked {
+    color: black;
+}

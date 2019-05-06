@@ -4,6 +4,7 @@ import axios from "axios"
 import {Navbar, Dropdown, Button, Alert} from 'react-bootstrap';
 import "./WorldMap.css"
 import date from "../common/date";
+import {forEach} from "react-bootstrap/es/utils/ElementChildren";
 
 
 class WorldMap extends Component {
@@ -39,13 +40,27 @@ class WorldMap extends Component {
 
     componentDidMount() {
         axios.get("http://localhost:9000/map/datatype", this.state.httpHeaders).then(response => {
-            response.data.map((dataType) => {
+            response.data.filter(function (dataType) {
+                return dataType.rowToColor !== "";
+            }).map((dataType) => {
                 axios.get("http://localhost:9000/map/datatype/" + dataType.id + "/property", this.state.httpHeaders).then(response => {
-                    dataType["properties"] = response.data;
+                    let show = false;
+                    response.data.map(property => {
+                        if (property.show === true) show = true;
+                    });
 
-                    this.setState(prevState => ({
-                        dataTypes: [...prevState.dataTypes, dataType]
-                    }))
+                    if (show === true) {
+                        dataType["properties"] = [];
+                        response.data.map(property => {
+                            if (property.show === true) {
+                                dataType["properties"].push(property.properties);
+                            }
+                        });
+
+                        this.setState(prevState => ({
+                            dataTypes: [...prevState.dataTypes, dataType]
+                        }))
+                    }
                 })
             });
         });
@@ -69,8 +84,8 @@ class WorldMap extends Component {
             shapes: []
         });
         this.setState({
-            noInfoPopup:{
-                show:false
+            noInfoPopup: {
+                show: false
             }
         });
     }
@@ -78,8 +93,8 @@ class WorldMap extends Component {
 
     getShape(e) {
         this.setState({
-            noInfoPopup:{
-                show:false
+            noInfoPopup: {
+                show: false
             }
         });
         if (this.state.currentDataType.id === 0) {
@@ -120,6 +135,9 @@ class WorldMap extends Component {
     }
 
     stringToColor(str) {
+        if (str === null || str === undefined){
+            return "#000000"
+        }
         for (var i = 0, hash = 0; i < str.length; hash = str.charCodeAt(i++) + ((hash << 5) - hash)) ;
         let color = Math.floor(Math.abs((Math.sin(hash) * 10000) % 1 * 16777216)).toString(16);
         return '#' + Array(6 - color.length + 1).join('0') + color;
