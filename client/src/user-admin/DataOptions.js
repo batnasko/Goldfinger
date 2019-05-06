@@ -9,6 +9,7 @@ import RadioGroup from '@material-ui/core/RadioGroup'
 import axios from 'axios';
 
 import "./DataOptions.css";
+import date from "../common/date";
 
 
 class DataOptions extends Component {
@@ -21,6 +22,7 @@ class DataOptions extends Component {
             showTables: false,
             dataTypes: [],
             currentDataType: 0,
+            currentDataTypeName: "",
             currentDataOptions: {
             },
 
@@ -48,6 +50,15 @@ class DataOptions extends Component {
                 Authorization: "Bearer " + this.props.user.token
             }
         });
+
+        axios.post("http://localhost:8000/auditability", {
+            "username": this.props.user.userDetails.username,
+            "ip": this.props.user.ip,
+            "date": date(),
+            "msg": "Set row to color " + event.target.value + " for "+this.state.currentDataTypeName,
+            "dataType": this.state.currentDataTypeName
+        });
+
         this.setState({rowToColor: event.target.value});
     };
 
@@ -64,14 +75,31 @@ class DataOptions extends Component {
                 Authorization: "Bearer " + this.props.user.token
             }
         });
+        let msg = currDataOpt[name]? "show":"hide";
+        axios.post("http://localhost:8000/auditability", {
+            "username": this.props.user.userDetails.username,
+            "ip": this.props.user.ip,
+            "date": date(),
+            "msg": "Set " + name + " for "+this.state.currentDataTypeName +" to " + msg,
+            "dataType": this.state.currentDataTypeName
+        });
 
         this.setState({currentDataOptions: currDataOpt});
     };
 
     changeDataType(dataType) {
+        let data = "";
+
+        this.state.dataTypes.forEach(dataTypeFromState =>{
+            if (dataTypeFromState.id === dataType){
+                data = dataTypeFromState.dataType
+            }
+        });
+
         this.setState({
             showTables: true,
             currentDataType: dataType,
+            currentDataTypeName : data,
             currentDataOptions: {}
         });
 
@@ -84,7 +112,7 @@ class DataOptions extends Component {
             response.data.map(property => {
                 this.addDataType(property);
             })
-        })
+        });
 
         axios.get("http://localhost:9000/map/datatype/" + dataType, {
             headers: {
