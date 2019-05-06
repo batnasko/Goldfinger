@@ -113,8 +113,8 @@ class WorldMap extends Component {
             axios.post("http://localhost:8000/auditability", {
                 "username": this.props.user.userDetails.username,
                 "ip": this.props.user.ip,
-                "date": date(),
-                "msg": "Asked for " + this.state.currentDataType.dataType + " data for point lat:" + data.longitude + " lng:" + data.latitude,
+                "time": date(),
+                "message": "Asked for " + this.state.currentDataType.dataType + " data for point lat:" + data.longitude + " lng:" + data.latitude,
                 "dataType": this.state.currentDataType.dataType
             });
             axios.post("http://localhost:9000/map/shape/" + this.state.currentDataType.id, data, this.props.httpHeaders).then(response => {
@@ -154,8 +154,8 @@ class WorldMap extends Component {
             axios.post("http://localhost:8000/auditability", {
                 "username": this.props.user.userDetails.username,
                 "ip": this.props.user.ip,
-                "date": date(),
-                "msg": "Asked for all data for " + this.state.currentDataType.dataType + " data type",
+                "time": date(),
+                "message": "Asked for all data for " + this.state.currentDataType.dataType + " data type",
                 "dataType": this.state.currentDataType.dataType
             });
             axios.get("http://localhost:9000/map/shape/" + this.state.currentDataType.id, this.state.httpHeaders).then(response => {

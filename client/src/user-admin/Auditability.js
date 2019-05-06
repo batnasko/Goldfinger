@@ -8,7 +8,6 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import ToolkitProvider, {CSVExport} from 'react-bootstrap-table2-toolkit';
 import axios from "axios";
-import date from "../common/date";
 import "./Auditability.css";
 
 const {ExportCSVButton} = CSVExport;
@@ -28,11 +27,11 @@ class Auditability extends Component {
                 text: 'IP',
                 sort: true
             }, {
-                dataField: 'date',
+                dataField: 'time',
                 text: 'Time of the event',
                 sort: true
             }, {
-                dataField: 'msg',
+                dataField: 'message',
                 text: 'Message',
                 sort: true
             }]

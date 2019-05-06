@@ -52,8 +52,8 @@ class Register extends Component {
             axios.post("http://localhost:8000/auditability",{
                 "username": data.username,
                 "ip" : ip,
-                "date": date(),
-                "msg": "Registered"
+                "time": date(),
+                "message": "Registered"
             });
             this.props.showLogin();
         }, error => {

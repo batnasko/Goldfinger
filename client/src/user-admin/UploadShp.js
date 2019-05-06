@@ -81,8 +81,8 @@ class UploadShp extends Component {
                     axios.post("http://localhost:8000/auditability", {
                         "username": user.userDetails.username,
                         "ip": user.ip,
-                        "date": date(),
-                        "msg": "Uploaded " + data.shpFileName,
+                        "time": date(),
+                        "message": "Uploaded " + data.shpFileName,
                         "dataType": data.shpFileName
                     });
                     returnToMap()

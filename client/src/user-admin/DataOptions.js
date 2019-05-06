@@ -54,8 +54,8 @@ class DataOptions extends Component {
         axios.post("http://localhost:8000/auditability", {
             "username": this.props.user.userDetails.username,
             "ip": this.props.user.ip,
-            "date": date(),
-            "msg": "Set row to color " + event.target.value + " for "+this.state.currentDataTypeName,
+            "time": date(),
+            "message": "Set row to color " + event.target.value + " for "+this.state.currentDataTypeName,
             "dataType": this.state.currentDataTypeName
         });
 
@@ -79,8 +79,8 @@ class DataOptions extends Component {
         axios.post("http://localhost:8000/auditability", {
             "username": this.props.user.userDetails.username,
             "ip": this.props.user.ip,
-            "date": date(),
-            "msg": "Set " + name + " for "+this.state.currentDataTypeName +" to " + msg,
+            "time": date(),
+            "message": "Set " + name + " for "+this.state.currentDataTypeName +" to " + msg,
             "dataType": this.state.currentDataTypeName
         });
 

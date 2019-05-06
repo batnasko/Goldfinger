@@ -27,8 +27,8 @@ class Login extends Component {
             axios.post("http://localhost:8000/auditability",{
                 "username": data.username,
                 "ip" : ip,
-                "date": date(),
-                "msg": "Logged in"
+                "time": date(),
+                "message": "Logged in"
             });
             this.props.setToken(response.data);
             this.props.showMainPage();
@@ -36,8 +36,8 @@ class Login extends Component {
             axios.post("http://localhost:8000/auditability",{
                 "username": data.username,
                 "ip" : ip,
-                "date": date(),
-                "msg": "Tried to log in"
+                "time": date(),
+                "message": "Tried to log in"
             });
             this.setState({
                 invalidLogin: true
