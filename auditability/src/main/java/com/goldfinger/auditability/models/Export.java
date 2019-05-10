@@ -1,15 +1,15 @@
 package com.goldfinger.auditability.models;
 
 public class Export  {
-    private SearchFilter searchFilter;
+    private String search;
     private String[] columnsToExport;
 
-    public SearchFilter getSearchFilter() {
-        return searchFilter;
+    public String getSearch() {
+        return search;
     }
 
-    public void setSearchFilter(SearchFilter searchFilter) {
-        this.searchFilter = searchFilter;
+    public void setSearch(String search) {
+        this.search = search;
     }
 
     public String[] getColumnsToExport() {

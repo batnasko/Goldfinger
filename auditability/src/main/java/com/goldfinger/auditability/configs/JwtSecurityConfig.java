@@ -33,7 +33,7 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthenticationTokenFilter authenticationTokenFilter() {
-        JwtAuthenticationTokenFilter filter = new JwtAuthenticationTokenFilter("/auditability/***");
+        JwtAuthenticationTokenFilter filter = new JwtAuthenticationTokenFilter("/**");
         filter.setAuthenticationManager(authenticationManager());
         filter.setAuthenticationSuccessHandler(new JwtSuccessHandler());
         return filter;

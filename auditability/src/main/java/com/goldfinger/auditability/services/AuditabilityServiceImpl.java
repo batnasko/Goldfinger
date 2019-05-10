@@ -38,24 +38,23 @@ public class AuditabilityServiceImpl implements AuditabilityService {
     }
 
     @Override
-    public List<Map<String, String>> getLogs(SearchFilter searchFilter) {
-        String search = searchFilter.getSearch();
-        List<Integer> logIds = new ArrayList<>();
+    public List<Map<String, String>> getLogs(String search) {
+        List<Integer> logIds;
 
-        if (search == null) {
-            logIds = auditabilityRepository.getAllLogs(searchFilter.getFilter());
+        if (search == null || search.trim().equals("")) {
+            logIds = auditabilityRepository.getAllLogs();
         } else {
             search = search.trim();
 
             if (search.startsWith("\"") && search.endsWith("\"")) {
                 search = search.substring(1, search.length() - 1);
-                logIds = auditabilityRepository.searchPhrase(search, searchFilter.getFilter());
+                logIds = auditabilityRepository.searchPhrase(search);
             } else if (isDoubleDotSearch(search)) {
                 String[] searchSplit = search.split(":", 2);
-                logIds = auditabilityRepository.searchWordInPair(searchSplit[0].trim(), searchSplit[1].trim(), searchFilter.getFilter());
+                logIds = auditabilityRepository.searchWordInPair(searchSplit[0].trim(), searchSplit[1].trim());
             } else if (isEqualSearch(search)) {
                 String[] searchSplit = search.split("=");
-                logIds = auditabilityRepository.searchExactTextInPairs(searchSplit[0].trim(), searchSplit[1].trim(), searchFilter.getFilter());
+                logIds = auditabilityRepository.searchExactTextInPairs(searchSplit[0].trim(), searchSplit[1].trim());
             } else {
                 String[] words = search.split(" ");
                 StringBuilder searchParsed = new StringBuilder();
@@ -84,7 +83,7 @@ public class AuditabilityServiceImpl implements AuditabilityService {
         if (export.getColumnsToExport() == null || export.getColumnsToExport().length == 0) {
             throw new IllegalArgumentException(NO_COLUMNS_TO_EXPORT);
         }
-        return parser.logsToCSV(getLogs(export.getSearchFilter()), export.getColumnsToExport());
+        return parser.logsToCSV(getLogs(export.getSearch()),export.getColumnsToExport());
     }
 
     private boolean isEqualSearch(String search) {

@@ -1,6 +1,5 @@
 package com.goldfinger.auditability.repositories;
 
-import com.goldfinger.auditability.models.Filter;
 import com.goldfinger.auditability.repositories.contracts.AuditabilityRepository;
 import com.goldfinger.auditability.repositories.helpers.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,29 +67,26 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
     }
 
     @Override
-    public List<Integer> getAllLogs(Filter filter) {
+    public List<Integer> getAllLogs() {
         String sql = "SELECT distinct log_id from pairs";
-        sql = addOrderToQuery(sql, filter);
         return executeSearchQuery(sql);
     }
 
     @Override
-    public List<Integer> searchPhrase(String phrase, Filter filter) {
+    public List<Integer> searchPhrase(String phrase) {
         String sql = "select log_id from pairs where match(key_, value_) AGAINST('\"" + phrase + "\"' in boolean mode) group by log_id order by sum(match(key_, value_) AGAINST('\"" + phrase + "\"' in boolean mode)) DESC;";
         return executeSearchQuery(sql);
     }
 
     @Override
-    public List<Integer> searchWordInPair(String key, String value, Filter filter) {
+    public List<Integer> searchWordInPair(String key, String value) {
         String sql = "SELECT distinct log_id from pairs WHERE log_id IN (SELECT log_id from pairs where key_ = '" + key + "' AND value_ like '%" + value + "%')";
-        sql = addOrderToQuery(sql, filter);
         return executeSearchQuery(sql);
     }
 
     @Override
-    public List<Integer> searchExactTextInPairs(String key, String value, Filter filter) {
+    public List<Integer> searchExactTextInPairs(String key, String value) {
         String sql = "SELECT distinct log_id from pairs WHERE log_id IN (SELECT log_id from pairs where key_ = '" + key + "' AND value_ = '" + value + "')";
-        sql = addOrderToQuery(sql, filter);
         return executeSearchQuery(sql);
     }
 
@@ -100,12 +96,6 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
         return executeSearchQuery(sql);
     }
 
-    private String addOrderToQuery(String sql, Filter filter) {
-        if (filter != null) {
-            sql += " and key_ = '" + filter.getSortBy() + "' ORDER BY value_ " + filter.getOrder() + ";";
-        }
-        return sql;
-    }
 
     private List<Integer> executeSearchQuery(String sql) {
         try (

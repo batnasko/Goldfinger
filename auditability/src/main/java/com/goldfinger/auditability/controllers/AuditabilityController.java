@@ -35,9 +35,9 @@ public class AuditabilityController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/get")
-    public List<Map<String, String>> getLogs(@RequestBody SearchFilter searchFilter) {
+    public List<Map<String, String>> getLogs(@RequestBody Search search) {
         try {
-            return auditabilityService.getLogs(searchFilter);
+            return auditabilityService.getLogs(search.getSearch());
         } catch (ArrayIndexOutOfBoundsException | StringIndexOutOfBoundsException e ) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, INVALID_SEARCH);
         } catch (ResourceAccessException e) {

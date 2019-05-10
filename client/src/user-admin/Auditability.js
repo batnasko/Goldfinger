@@ -51,7 +51,7 @@ class Auditability extends Component {
                 }
             }
         }
-        axios.post("http://localhost:8000/auditability/get", body,{
+        axios.post("http://localhost:8000/auditability/get",body,{
             headers:{
                 "Authorization" : "Bearer " + this.props.user.token
             }
