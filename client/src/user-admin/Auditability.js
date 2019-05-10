@@ -20,20 +20,16 @@ class Auditability extends Component {
             logs: [],
             columnsToDisplay: [{
                 dataField: 'username',
-                text: 'Username',
-                sort: true
+                text: 'Username'
             }, {
                 dataField: 'ip',
-                text: 'IP',
-                sort: true
+                text: 'IP'
             }, {
                 dataField: 'time',
-                text: 'Time of the event',
-                sort: true
+                text: 'Time of the event'
             }, {
                 dataField: 'message',
-                text: 'Message',
-                sort: true
+                text: 'Message'
             }]
         }
     }
