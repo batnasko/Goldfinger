@@ -20,5 +20,4 @@ public interface AuditabilityRepository {
 
     List<Integer> fullTextSearch(String search);
 
-
 }

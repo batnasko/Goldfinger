@@ -71,7 +71,6 @@ public class AuditabilityServiceImpl implements AuditabilityService {
         }
 
 
-
         return auditabilityRepository.getLogs(logIds);
     }
 

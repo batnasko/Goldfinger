@@ -16,7 +16,6 @@ import java.util.*;
 @PropertySource("classpath:application.properties")
 public class AuditabilityRepositoryImpl implements AuditabilityRepository {
     private static final String COULDNT_INSERT_LOG_ID = "Couldn't insert new log id";
-    private static final String LOG_NOT_FOUND = "Log not found";
 
     private String dbUrl, username, password;
     private Parser parser;
@@ -38,7 +37,7 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
     @Override
     public List<Map<String, String>> getLogs(List<Integer> logIds) {
         String ids = parser.list(logIds);
-        String sql = "select * from pairs where log_id IN ("+ids+") order by FIELD(log_id,"+ids+")";
+        String sql = "select * from pairs where log_id IN (" + ids + ") order by FIELD(log_id," + ids + ")";
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
                 Statement statement = connection.createStatement();
