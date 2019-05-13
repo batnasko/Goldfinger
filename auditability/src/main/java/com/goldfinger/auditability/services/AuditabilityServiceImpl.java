@@ -13,6 +13,7 @@ import java.util.*;
 @Service
 public class AuditabilityServiceImpl implements AuditabilityService {
     private static final String NO_COLUMNS_TO_EXPORT = "Please enter columns to export";
+    private static final String EMPTY_LOG = "Log doesn't contain any key-value pairs";
 
     private AuditabilityRepository auditabilityRepository;
     private Parser parser;
@@ -25,14 +26,16 @@ public class AuditabilityServiceImpl implements AuditabilityService {
 
     @Override
     public boolean addLog(HashMap<String, String> log) {
+        if (log.isEmpty()) {
+            throw new IllegalArgumentException(EMPTY_LOG);
+        }
         StringBuilder wholeLog = new StringBuilder();
         for (Map.Entry<String, String> entry : log.entrySet()) {
             wholeLog.append(entry.getKey()).append(" ").append(entry.getValue()).append(" ");
         }
         long logId = auditabilityRepository.addNewLog(wholeLog.toString());
-        auditabilityRepository.addKeyValues(logId,log);
+        auditabilityRepository.addKeyValues(logId, log);
         return true;
-
     }
 
     @Override
@@ -81,7 +84,7 @@ public class AuditabilityServiceImpl implements AuditabilityService {
         if (export.getColumnsToExport() == null || export.getColumnsToExport().length == 0) {
             throw new IllegalArgumentException(NO_COLUMNS_TO_EXPORT);
         }
-        return parser.logsToCSV(getLogs(export.getSearch()),export.getColumnsToExport());
+        return parser.logsToCSV(getLogs(export.getSearch()), export.getColumnsToExport());
     }
 
     private boolean isEqualSearch(String search) {

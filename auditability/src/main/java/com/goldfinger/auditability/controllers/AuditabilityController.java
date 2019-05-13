@@ -28,7 +28,10 @@ public class AuditabilityController {
     public void addNewLog(@RequestBody HashMap<String, String> log) {
         try {
             auditabilityService.addLog(log);
-        } catch (ResourceAccessException e) {
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch
+        (ResourceAccessException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
@@ -38,7 +41,7 @@ public class AuditabilityController {
     public List<Map<String, String>> getLogs(@RequestBody Search search) {
         try {
             return auditabilityService.getLogs(search.getSearch());
-        } catch (ArrayIndexOutOfBoundsException | StringIndexOutOfBoundsException e ) {
+        } catch (ArrayIndexOutOfBoundsException | StringIndexOutOfBoundsException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, INVALID_SEARCH);
         } catch (ResourceAccessException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
