@@ -70,13 +70,9 @@ public class AuditabilityServiceImpl implements AuditabilityService {
             }
         }
 
-        List<Map<String, String>> logs = new ArrayList<>();
 
-        for (Integer logId : logIds) {
-            logs.add(auditabilityRepository.getLog(logId));
-        }
 
-        return logs;
+        return auditabilityRepository.getLogs(logIds);
     }
 
     @Override

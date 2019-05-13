@@ -6,9 +6,9 @@ import java.util.*;
 public interface AuditabilityRepository {
     long addNewLog(String log);
 
-    Map<String, String> getLog(long logId);
+    List<Map<String, String>> getLogs(List<Integer> logIds);
 
-    boolean addKeyValues(long logId, Map<String,String> log);
+    boolean addKeyValues(long logId, Map<String, String> log);
 
     List<Integer> getAllLogs();
 

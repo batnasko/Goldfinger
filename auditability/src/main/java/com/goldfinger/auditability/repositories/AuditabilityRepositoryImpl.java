@@ -36,17 +36,15 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
     }
 
     @Override
-    public Map<String, String> getLog(long logId) {
-        String sql = "SELECT * FROM pairs WHERE log_id = " + logId + ";";
+    public List<Map<String, String>> getLogs(List<Integer> logIds) {
+        String ids = parser.list(logIds);
+        String sql = "select * from pairs where log_id IN ("+ids+") order by FIELD(log_id,"+ids+")";
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(sql)
         ) {
-            if (resultSet.next()) {
-                return parser.log(resultSet);
-            }
-            throw new ResourceAccessException(LOG_NOT_FOUND);
+            return parser.logs(resultSet);
         } catch (SQLException e) {
             throw new ResourceAccessException(e.getMessage());
         }
