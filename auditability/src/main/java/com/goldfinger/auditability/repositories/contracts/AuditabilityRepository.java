@@ -8,7 +8,7 @@ public interface AuditabilityRepository {
 
     Map<String, String> getLog(long logId);
 
-    boolean addKeyValuePair(long logId, String key, String value);
+    boolean addKeyValues(long logId, Map<String,String> log);
 
     List<Integer> getAllLogs();
 

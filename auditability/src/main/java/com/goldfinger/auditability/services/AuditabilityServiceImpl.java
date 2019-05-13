@@ -30,9 +30,7 @@ public class AuditabilityServiceImpl implements AuditabilityService {
             wholeLog.append(entry.getKey()).append(" ").append(entry.getValue()).append(" ");
         }
         long logId = auditabilityRepository.addNewLog(wholeLog.toString());
-        for (Map.Entry<String, String> entry : log.entrySet()) {
-            auditabilityRepository.addKeyValuePair(logId, entry.getKey(), entry.getValue());
-        }
+        auditabilityRepository.addKeyValues(logId,log);
         return true;
 
     }

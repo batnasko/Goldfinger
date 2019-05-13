@@ -53,13 +53,19 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
     }
 
     @Override
-    public boolean addKeyValuePair(long logId, String key, String value) {
-        String sql = "INSERT INTO pairs (log_id,key_,value_) VALUES (" + logId + ", '" + key + "','" + value + "') ;";
+    public boolean addKeyValues(long logId, Map<String, String> log) {
+        String sql = "INSERT INTO pairs (log_id,key_,value_) VALUES ";
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append(sql);
+        for (Map.Entry<String, String> entry : log.entrySet()) {
+            sqlBuilder.append("(").append(logId).append(" , '").append(entry.getKey()).append("','").append(entry.getValue()).append("')").append(",");
+        }
+        sqlBuilder.setLength(sqlBuilder.length() - 1);
         try (
                 Connection connection = DriverManager.getConnection(dbUrl, username, password);
                 Statement statement = connection.createStatement()
         ) {
-            statement.execute(sql);
+            statement.execute(sqlBuilder.toString());
             return true;
         } catch (SQLException e) {
             throw new ResourceAccessException(e.getMessage());
