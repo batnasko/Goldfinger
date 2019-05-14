@@ -35,21 +35,6 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
     }
 
     @Override
-    public List<Map<String, String>> getLogs(List<Integer> logIds) {
-        String ids = parser.list(logIds);
-        String sql = "select * from pairs where log_id IN (" + ids + ") order by FIELD(log_id," + ids + ")";
-        try (
-                Connection connection = DriverManager.getConnection(dbUrl, username, password);
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sql)
-        ) {
-            return parser.logs(resultSet);
-        } catch (SQLException e) {
-            throw new ResourceAccessException(e.getMessage());
-        }
-    }
-
-    @Override
     public boolean addKeyValues(long logId, Map<String, String> log) {
         String sql = "INSERT INTO pairs (log_id,key_,value_) VALUES ";
         StringBuilder sqlBuilder = new StringBuilder();
@@ -64,6 +49,21 @@ public class AuditabilityRepositoryImpl implements AuditabilityRepository {
         ) {
             statement.execute(sqlBuilder.toString());
             return true;
+        } catch (SQLException e) {
+            throw new ResourceAccessException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Map<String, String>> getLogs(List<Integer> logIds) {
+        String ids = parser.list(logIds);
+        String sql = "select * from pairs where log_id IN (" + ids + ") order by FIELD(log_id," + ids + ")";
+        try (
+                Connection connection = DriverManager.getConnection(dbUrl, username, password);
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql)
+        ) {
+            return parser.logs(resultSet);
         } catch (SQLException e) {
             throw new ResourceAccessException(e.getMessage());
         }
